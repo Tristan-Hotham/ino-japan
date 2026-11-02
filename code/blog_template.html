@@ -1,0 +1,97 @@
+<!-- wp:paragraph -->
+<p><em>In {{facts.first_survey|raw}} a retired sake brewer called Ino Tadataka set out to measure Japan on foot. I put {{source.located|int}} sheets of his great survey map back on a modern map to see how close he got.</em></p>
+<!-- /wp:paragraph -->
+
+<!-- wp:buttons -->
+<div class="wp-block-buttons"><!-- wp:button -->
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://maps.tristanhotham.com/ino-japan/">Explore the interactive version</a></div>
+<!-- /wp:button -->
+<!-- wp:button -->
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://doi.org/10.5281/zenodo.23882609">Read the paper</a></div>
+<!-- /wp:button --></div>
+<!-- /wp:buttons -->
+
+<!-- wp:paragraph -->
+<p>Most of the old maps I have set against modern ones are wonderful and wrong. This one is the opposite. Ino Tadataka spent decades running a sake brewery in Sawara, east of Edo, and only after he retired did he go to the capital to study astronomy. In {{facts.first_survey|raw}}, at the age of {{facts.start_age|raw}}, he set off north with a small team, a measuring chain, compasses and a quadrant for the stars. Over the next {{facts.years|raw}} years his surveys walked about {{facts.walk_km|int}} km of coast and road. He died before the map was finished, and his team completed it in {{facts.completed|raw}}: {{facts.total_sheets|int}} large sheets, the first map of the whole of Japan drawn from measurement.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>The Library of Congress holds a manuscript copy of those large sheets, and photographs of sheets 1 to {{source.last_sheet|int}} are on Wikimedia Commons. They are all from the far north: Hokkaido, the southern Kurils and a strip of Sakhalin, drawn at 1:{{facts.scale_hokkaido|int}}. None of them has a grid of latitude and longitude, so first I had to find where each one belongs. I picked out the drawn coastline by colour and searched the modern map for the place where it fits best. {{source.located|int}} of the {{source.n_sheets|int}} sheets found a home; the rest are blank, unfinished pencil drafts or show too little coast.</p>
+<!-- /wp:paragraph -->
+
+{{IMG|b_overview.png|A modern map of Hokkaido, the southern Kurils and the tip of Sakhalin, with 28 numbered, semi-transparent boxes showing where each sheet of Ino's map falls, coloured by region, and the coast drawn on each sheet traced in red. The red lines run along the real coast almost everywhere, from the Japan Sea coast in the west to Nemuro and Kunashiri in the east|The 28 sheets put back in place on a modern map. Red: the coast as drawn on the sheets.}}
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">How close?</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>To measure each sheet I kept its scale fixed and let it move and turn once, to the position where its drawn coast best fits the modern coast. Then I measured, every kilometre along {{coast.km|int}} km of drawn coast, how far it lies from the modern line. On a typical sheet the median gap is {{coast.median_of_sheets_m|int}} m, and {{coast.within1000_median_pct|int}}% of the coast is within a kilometre. On the paper that is about {{expect.coast_mm|f1}} mm. Put the sheet on the map and the two coasts lie almost on top of each other.</p>
+<!-- /wp:paragraph -->
+
+{{IMG|b_sheet.png|Left, sheet 6 of Ino's map in watercolour, showing the Nemuro peninsula and Nemuro Bay with green hachured hills, with blue circles at control points. Right, a modern map of the same area with the coast drawn on the sheet, in red, lying along the modern shoreline and short blue arrows at the control points|Sheet 6, the Nemuro peninsula: as drawn, and laid on today's coast.}}
+
+{{IMG|b_coast.png|Horizontal bar chart of the median gap between each sheet's drawn coast and the modern coast, from 108 m for Hidaka-Monbetsu to 651 m for Shizunai, coloured by region, with a dotted line at 22 m marking half a millimetre on the sheet and a red line at the median of 280 m|How close each sheet's coast sits to today's.}}
+
+<!-- wp:paragraph -->
+<p>That number is an upper bound. Half a millimetre on the sheet is {{expect.draw_m|int}} m on the ground, so the gap is far bigger than any draughtsman's slip, but much of it is not Ino's. The sheets are copies, folded and photographed, and my modern coastline, Natural Earth's 1:10m outline, is drawn for maps of whole countries: it smooths away small bays and spits and can be several hundred metres off the real shore. A better modern line could only make Ino look better.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Capes and corners</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>A coastline pins a map across the shore but not along it, so I also used {{ctrl.n|int}} control points: {{ctrl.hand|int}} capes, spit tips and bends I picked by eye, and {{ctrl.auto|int}} curving stretches of coast matched automatically. They lie a median {{ctrl.median_m|int}} m from their true positions. Cape Nosappu, the eastern tip of Hokkaido, is {{ctrl.named.Cape Nosappu.res_m|int}} m out; Cape Notoro {{ctrl.named.Cape Notoro.res_m|int}} m. Cape Erimo is the outlier at {{ctrl.named.Cape Erimo.res_m|int}} m, drawn running further out to sea than the modern outline. The sheets are also square to the world: on those whose coast fixes the angle, the median tilt from true north is {{distortion.rot_abs_median|f1}} degrees, and their scales agree to within {{distortion.scale_dev_pct|int}}%.</p>
+<!-- /wp:paragraph -->
+
+{{IMG|b_closeup.png|Two close-up modern maps, of Cape Erimo and of Akkeshi, with the coast drawn on Ino's sheets in red closely following the modern shoreline and blue arrows from the sheets' control points to their true positions|Close up: the drawn coast on today's land at Cape Erimo and Akkeshi.}}
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">The whole country</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>The large sheets cannot say where Ino put Hokkaido as a whole, so for the national picture I used a map of Japan compiled from his survey and published by the Army General Staff in 1878. On {{national.n|int}} capes and islands, from Tsushima to the eastern tip of Honshu, the median point is {{national.median_km|f1}} km from where the best-fitting modern map puts it. Ino fixed latitudes by the stars and worked longitudes out from his traverses, so you might expect east and west to drift. At this resolution I cannot see it: north-south and east-west errors are the same size. The only hint is that east-west distances come out about {{national.ew_stretch_pct|f1}}% longer than north-south ones, which could as easily be the 1878 projection.</p>
+<!-- /wp:paragraph -->
+
+{{IMG|b_national.png|The 1878 Army General Staff map of Japan with short red arrows at 18 capes and islands, and beside it a scatter chart of east-west and north-south errors in km against longitude, scattered between about minus 15 and plus 13 km with no trend|The whole country on the 1878 map: each point's error, and east-west against north-south errors by longitude.}}
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">How I did this</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>The sheets are the Library of Congress copy's first {{source.n_sheets|int}}, {{source.pct_of_set|f1}}% of the {{facts.total_sheets|int}}, and all from the far north, so this says nothing directly about the main islands, which were drawn at 1:{{facts.scale_main|int}}. Much of the north on the finished map is usually credited to the surveyor Mamiya Rinzo, so this measures Ino's map rather than only his own footsteps. I aimed for 250 control points and found {{ctrl.n|int}}: smooth beaches and a generalised modern coast leave few features to match. The positions on the 1878 map are my own picks on a low-resolution photograph. The paper sets out every step, and the data and code are open.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:buttons -->
+<div class="wp-block-buttons"><!-- wp:button -->
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://maps.tristanhotham.com/ino-japan/">Explore the interactive version</a></div>
+<!-- /wp:button -->
+<!-- wp:button -->
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://doi.org/10.5281/zenodo.23882609">Read the paper</a></div>
+<!-- /wp:button -->
+<!-- wp:button -->
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://github.com/Tristan-Hotham/ino-japan">Data and code</a></div>
+<!-- /wp:button --></div>
+<!-- /wp:buttons -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">Notes and sources</h3>
+<!-- /wp:heading -->
+
+<!-- wp:list -->
+<ul class="wp-block-list"><!-- wp:list-item -->
+<li>Ino Tadataka and team, Dai Nihon Enkai Yochi Zenzu, large-scale sheets, manuscript copy, <a href="https://www.loc.gov/item/2001620020/">Library of Congress</a>, public domain; photographs via Wikimedia Commons.</li>
+<!-- /wp:list-item -->
+<!-- wp:list-item -->
+<li>Dai Nihon Zenzu, Army General Staff Bureau, 1878, Wikimedia Commons, public domain.</li>
+<!-- /wp:list-item -->
+<!-- wp:list-item -->
+<li><a href="https://www.naturalearthdata.com/">Natural Earth</a> 1:10m coastline (public domain).</li>
+<!-- /wp:list-item -->
+<!-- wp:list-item -->
+<li>I wrote the text, with drafting and editing assistance from Claude (Anthropic), which also helped prepare the analysis code. I reviewed and checked all text and results.</li>
+<!-- /wp:list-item --></ul>
+<!-- /wp:list -->

@@ -1,0 +1,19 @@
+feature,kind,x_1878,y_1878,conf,lat,lon,dE_km,dN_km,d_km,dlat_min,dlon_min
+Oma-zaki (northern tip of Honshu),cape,1643,113,medium,41.546,140.912,0.16,-4.42,4.42,-2.4,0.1
+Shiriya-saki,cape,1692,128,medium,41.43,141.462,-8.87,-3.43,9.51,-1.9,-6.4
+Tappi-zaki,cape,1580,155,medium,41.257,140.344,-0.27,-3.66,3.67,-2.0,-0.2
+Todoga-saki (easternmost Honshu),cape,1795,385,medium,39.547,142.072,13.09,9.4,16.12,5.1,9.2
+Nyudo-zaki (Oga peninsula),cape,1505,340,low,39.997,139.7,-2.89,-3.64,4.65,-2.0,-2.0
+Sado island (centre),island,1352,612,medium,38.05,138.38,-2.83,5.47,6.16,3.0,-1.9
+Rokko-saki (tip of Noto),cape,1228,698,medium,37.535,137.33,-2.89,-4.45,5.31,-2.4,-2.0
+Inubo-saki,cape,1658,960,medium,35.707,140.869,7.47,2.32,7.82,1.3,5.0
+Iro-zaki (tip of Izu),cape,1415,1125,medium,34.6,138.845,7.99,0.7,8.02,0.4,5.2
+Izu Oshima (centre),island,1475,1110,medium,34.74,139.4,2.39,-3.2,3.99,-1.7,1.6
+Shiono-misaki (tip of Kii),cape,1022,1298,low,33.435,135.762,-0.27,-8.54,8.54,-4.6,-0.2
+Awaji island (centre),island,918,1150,medium,34.4,134.83,2.12,-7.78,8.06,-4.2,1.4
+Muroto-misaki,cape,826,1295,medium,33.244,134.177,-0.49,7.16,7.18,3.9,-0.3
+Ashizuri-misaki,cape,657,1366,medium,32.722,133.019,-15.85,2.97,16.13,1.6,-10.2
+Sada-misaki,cape,562,1253,low,33.343,132.016,-0.38,13.3,13.31,7.2,-0.2
+Dogo in the Oki islands (centre),island,735,862,medium,36.27,133.27,-7.61,-6.53,10.03,-3.5,-5.1
+Tsushima (centre),island,243,1085,low,34.42,129.33,-4.25,-3.8,5.7,-2.1,-2.8
+Sata-misaki (southern tip of Kyushu),cape,378,1592,medium,30.994,130.661,12.74,7.0,14.54,3.8,8.0

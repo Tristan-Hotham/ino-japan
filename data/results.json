@@ -1,0 +1,209 @@
+{
+ "source": {
+  "n_sheets": 40,
+  "total_sheets": 214,
+  "pct_of_set": 18.7,
+  "located": 28,
+  "not_located": 12,
+  "drafts": 8,
+  "located_pct_of_set": 13.1,
+  "scale": 43600,
+  "scale_main": 36000,
+  "first_sheet": 1,
+  "last_sheet": 40
+ },
+ "regions": {
+  "Kuril islands": {
+   "sheets": 3,
+   "coast_median_m": 366,
+   "sheet_list": "2, 3, 4",
+   "coast_km": 130
+  },
+  "Okhotsk coast": {
+   "sheets": 6,
+   "coast_median_m": 392,
+   "sheet_list": "5, 7, 8, 9, 10, 11",
+   "coast_km": 334
+  },
+  "Nemuro and Kushiro": {
+   "sheets": 3,
+   "coast_median_m": 265,
+   "sheet_list": "6, 21, 22",
+   "coast_km": 163
+  },
+  "Pacific coast": {
+   "sheets": 8,
+   "coast_median_m": 414,
+   "sheet_list": "23, 24, 25, 26, 27, 28, 29, 30",
+   "coast_km": 400
+  },
+  "Japan Sea coast": {
+   "sheets": 7,
+   "coast_median_m": 271,
+   "sheet_list": "13, 15, 16, 17, 19, 20, 32",
+   "coast_km": 410
+  },
+  "Sakhalin": {
+   "sheets": 1,
+   "coast_median_m": 169,
+   "sheet_list": "12",
+   "coast_km": 57
+  }
+ },
+ "coast": {
+  "km": 1494,
+  "median_of_sheets_m": 280,
+  "best_sheet": 26,
+  "best_m": 108,
+  "best_place": "Hidaka-Monbetsu",
+  "worst_sheet": 25,
+  "worst_m": 651,
+  "worst_place": "Shizunai",
+  "within250_median_pct": 45,
+  "within500_median_pct": 69,
+  "within1000_median_pct": 90,
+  "sheets_under_300": 15,
+  "sheets_over_500": 5
+ },
+ "ctrl": {
+  "n": 93,
+  "hand": 23,
+  "auto": 70,
+  "sheets": 16,
+  "sheets_4": 10,
+  "sheets_8": 6,
+  "target": 250,
+  "median_m": 543,
+  "p90_m": 1746,
+  "hand_median_m": 870,
+  "auto_median_m": 481,
+  "under_500_pct": 45.2,
+  "under_1000_pct": 72.0,
+  "max_m": 2702,
+  "high_n": 9,
+  "named": {
+   "Chayashikotsu cape (labelled misaki)": {
+    "res_m": 870,
+    "sheet": 3
+   },
+   "Notetou cape (labelled misaki)": {
+    "res_m": 1763,
+    "sheet": 3
+   },
+   "Notsuke spit tip": {
+    "res_m": 306,
+    "sheet": 5
+   },
+   "Cape Nosappu": {
+    "res_m": 585,
+    "sheet": 6
+   },
+   "spit tip on Nemuro Bay": {
+    "res_m": 1013,
+    "sheet": 6
+   },
+   "Cape Notoro": {
+    "res_m": 531,
+    "sheet": 7
+   },
+   "tip of the Shakotan peninsula": {
+    "res_m": 557,
+    "sheet": 19
+   },
+   "Cape Erimo": {
+    "res_m": 2702,
+    "sheet": 24
+   }
+  }
+ },
+ "fitq": {
+  "sim_sheets": 10,
+  "sim_loo_median_m": 508,
+  "sim_rms_median_m": 602,
+  "aff_sheets": 6,
+  "aff_loo_median_m": 536,
+  "sim_loo_on_aff_sheets_m": 536,
+  "quad_sheets": 2,
+  "quad_loo_m": 824,
+  "aff_loo_on_quad_sheets_m": 448,
+  "aff_better": 2
+ },
+ "distortion": {
+  "rot_n": 15,
+  "rot_median": 0.9,
+  "rot_abs_median": 1.3,
+  "rot_min": -1.9,
+  "rot_max": 7.3,
+  "rot_within2": 12,
+  "scale_n": 6,
+  "scale_median": 0.992,
+  "scale_min": 0.951,
+  "scale_max": 1.034,
+  "scale_dev_pct": 5
+ },
+ "expect": {
+  "draw_mm": 0.5,
+  "draw_m": 22,
+  "ri_cm": 9.0,
+  "px_m": 11.9,
+  "coast_mm": 6.4,
+  "ctrl_mm": 12.5,
+  "coast_x_draw": 13
+ },
+ "national": {
+  "n": 18,
+  "rms_ew_km": 7.1,
+  "rms_ns_km": 6.2,
+  "km_per_px": 0.75,
+  "ew_ns_ratio": 0.981,
+  "ci_lo_pct": 0.1,
+  "ci_hi_pct": 3.8,
+  "slope_ew": 0.39,
+  "slope_ns": -0.22,
+  "median_km": 7.9,
+  "max_km": 16.1,
+  "max_feature": "Ashizuri-misaki",
+  "dlat_abs_median_min": 2.4,
+  "dlon_abs_median_min": 2.0,
+  "ew_stretch_pct": 1.9,
+  "pick_km": 2.3
+ },
+ "facts": {
+  "born": 1745,
+  "died": 1818,
+  "first_survey": 1800,
+  "start_age": 55,
+  "years": 17,
+  "walk_km": 35000,
+  "completed": 1821,
+  "total_sheets": 214,
+  "scale_main": 36000,
+  "scale_hokkaido": 43600
+ },
+ "method": {
+  "m_per_orig_px": 6.66,
+  "dpi": 166,
+  "window_km": 8,
+  "window_step_km": 3,
+  "tie_cond": 0.1,
+  "rot_cond": 0.15,
+  "tie_match_m": 600,
+  "tie_shift_km": 3,
+  "stroke_qpx": 40,
+  "rot_range": 15,
+  "rot_step": 3,
+  "grid_km": 1,
+  "width_px": 3840,
+  "nat_w": 1885,
+  "boot": 2000,
+  "islands": 5
+ },
+ "meta": {
+  "page": "https://maps.tristanhotham.com/ino-japan/",
+  "repo": "https://github.com/Tristan-Hotham/ino-japan",
+  "doi": "10.5281/zenodo.23882609",
+  "blog": "https://blog.tristanhotham.com/2026/10/31/ino-japan/",
+  "slug": "ino-japan",
+  "loc": "https://www.loc.gov/item/2001620020/"
+ }
+}

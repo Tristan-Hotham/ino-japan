@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Ino's Japan</title>
+<meta name="description" content="Ino Tadataka's survey map of Japan (1821) set beside a modern map: {{source.located|int}} sheets of the Library of Congress copy put back in place, and how close their {{coast.km|int}} km of drawn coast comes to today's.">
+<meta property="og:title" content="Ino's Japan: how close did he get?">
+<meta property="og:description" content="A retired sake brewer measured Japan on foot. On {{source.located|int}} of his large-scale sheets, the drawn coast sits a median {{coast.median_of_sheets_m|int}} m from today's.">
+<meta property="og:image" content="https://maps.tristanhotham.com/ino-japan/header.png">
+<meta property="og:url" content="https://maps.tristanhotham.com/ino-japan/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800;9..144,900&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+<style>
+/* Washi: mulberry paper, sumi ink, the vermilion of Ino's survey lines, indigo for the sea and the green of his hills. */
+:root{
+  --bg:#F6F1E6; --panel:#ECE4D2; --fg:#22201C; --muted:#68625A; --rule:#E0D6C1; --card:#FFFCF4; --border:#CEC2A8;
+  --red:#B8322A; --blue:#2F4F86; --green:#4E7D5B; --gold:#B07A12; --land:#E8E0CC; --sea:#E6ECEE;
+  --display:"Fraunces",Georgia,"Times New Roman",serif;
+  --body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#15130F; --panel:#1F1C17; --fg:#EEE8DC; --muted:#AAA294; --rule:#332F27; --card:#1A1813; --border:#4A443A;
+  --red:#F07B66; --blue:#8FAAE0; --green:#7FBF92; --gold:#E8B54F; --land:#2A2720; --sea:#14171A; color-scheme:dark; --icofilter:invert(1)}}
+:root[data-theme="dark"]{
+  --bg:#15130F; --panel:#1F1C17; --fg:#EEE8DC; --muted:#AAA294; --rule:#332F27; --card:#1A1813; --border:#4A443A;
+  --red:#F07B66; --blue:#8FAAE0; --green:#7FBF92; --gold:#E8B54F; --land:#2A2720; --sea:#14171A; color-scheme:dark; --icofilter:invert(1)}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 18px/1.62 var(--body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));overflow-x:hidden}
+.wrap{max-width:700px;margin:0 auto;padding-block:28px 64px}
+.wrap .bleed{width:min(1240px,calc(100vw - 32px));margin-left:calc((100% - min(1240px,100vw - 32px))/2);margin-right:0}
+a{color:inherit;text-decoration-color:var(--red);text-underline-offset:3px}
+.kicker{font:500 12px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.kicker b{background:var(--red);color:#fff;padding:5px 8px;font-weight:500}
+header.hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px 24px;align-items:end;border-bottom:6px double var(--fg);padding-bottom:22px;margin-top:18px}
+h1{font:900 clamp(46px,11.5vw,88px)/.9 var(--display);letter-spacing:-.02em;margin:0;text-wrap:balance}
+h1 span{color:var(--red)}
+.mark{width:clamp(78px,16vw,128px);height:auto;display:block;color:var(--fg)}
+.dek{grid-column:1/-1;font-size:21px;line-height:1.42;margin:8px 0 0;max-width:58ch}
+.byline{font:400 13px/1.4 var(--mono);color:var(--muted);margin-top:14px}
+h2{font:800 34px/1.04 var(--display);letter-spacing:-.01em;margin:54px 0 10px;text-wrap:balance}
+h2 .n{font:500 13px/1 var(--mono);color:var(--red);display:block;letter-spacing:.1em;margin-bottom:10px}
+p{margin:0 0 16px}
+.lede::first-letter{font:900 72px/.8 var(--display);float:left;margin:6px 10px 0 0;color:var(--red)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);margin:26px 0 8px}
+.stats div{background:var(--card);padding:14px 12px}
+.stats b{display:block;font:900 clamp(22px,4.4vw,32px)/1 var(--display);letter-spacing:-.01em}
+.stats b.a{color:var(--red)} .stats b.b{color:var(--blue)} .stats b.c{color:var(--green)} .stats b.d{color:var(--gold)}
+.stats span{font:400 12px/1.35 var(--mono);color:var(--muted);display:block;margin-top:6px}
+@media (max-width:600px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.figure{margin:26px 0 30px}
+.fig-h{font:600 19px/1.25 var(--display);margin:0 0 4px}
+.fig-sub{font:400 13px/1.45 var(--mono);color:var(--muted);margin:0 0 12px}
+.src{font:400 12px/1.45 var(--mono);color:var(--muted);margin-top:10px}
+.chart{width:100%;position:relative}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+svg text{font-family:var(--mono);fill:var(--fg)}
+.lab{font-size:12px}.lab.m{fill:var(--muted)}.lab.b{font-weight:500}.lab.s{font-size:11px}
+.tip{position:absolute;pointer-events:none;background:var(--fg);color:var(--bg);font:400 12px/1.45 var(--mono);padding:8px 10px;border-radius:3px;max-width:300px;z-index:1000;transform:translate(-50%,calc(-100% - 12px));display:none}
+.tip b{font-weight:500}
+.controls{display:flex;gap:8px;align-items:center;margin:0 0 10px;flex-wrap:wrap}
+.scrollrow{display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin;padding-bottom:2px;max-width:100%}
+.scrollrow .btn{flex:0 0 auto;white-space:nowrap}
+.ctl-l{font:500 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-right:2px;flex:0 0 auto;align-self:center}
+.btn{font:500 12px/1 var(--mono);background:var(--card);color:var(--fg);border:1px solid var(--border);border-radius:3px;padding:8px 10px;cursor:pointer;min-height:36px}
+.btn[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.btn i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.btn:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+select{font:400 14px/1 var(--mono);background:var(--card);color:var(--fg);border:1px solid var(--border);border-radius:3px;padding:8px 10px;min-height:40px;max-width:100%}
+.twin{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+@media (max-width:860px){.twin{grid-template-columns:1fr}}
+.mapcap{font:500 11px/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 6px;display:flex;justify-content:space-between;gap:8px;align-items:end}
+.mapcap b{color:var(--fg);font-weight:500}
+.lmap{height:600px;border:1px solid var(--border);background:var(--sea);border-radius:2px;position:relative;overflow:hidden}
+#smap{background:var(--panel)}
+@media (max-width:860px){.lmap{height:min(62vh,500px)}}
+.side{background:var(--card);border:1px solid var(--border);padding:12px 14px 10px;font:400 13px/1.5 var(--mono);margin-top:12px;min-height:90px}
+.side .big{font:800 26px/1.1 var(--display);margin:2px 0 4px}
+.side .sub{color:var(--muted);font-size:12px;margin:0 0 8px}
+.side table{border-collapse:collapse;margin:6px 0}
+.side td{padding:3px 12px 3px 0;vertical-align:top}
+.side td:first-child{color:var(--muted);white-space:nowrap}
+.side .pt{border-top:1px solid var(--rule);margin-top:8px;padding-top:8px}
+.chip{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.maplibregl-map{font:400 12px/1.4 var(--mono)}
+.maplibregl-ctrl-attrib{background:color-mix(in srgb,var(--card) 85%,transparent)!important;color:var(--muted)}
+.maplibregl-ctrl-attrib a{color:var(--fg)}
+.maplibregl-ctrl-group{background:var(--card)}
+.maplibregl-ctrl-group button .maplibregl-ctrl-icon{filter:var(--icofilter,none)}
+.lyrWrap{position:absolute;top:10px;left:10px;z-index:3}
+.lyrBtn{background:var(--card);color:var(--fg);border:1px solid var(--border);border-radius:3px;font:600 12px/1 var(--mono);padding:9px 10px;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.lyrBtn[aria-expanded="true"]{background:var(--fg);color:var(--bg)}
+.lyrPanel{background:var(--card);color:var(--fg);border:1px solid var(--border);border-radius:3px;padding:10px 12px 8px;margin-top:6px;width:250px;box-shadow:0 2px 10px rgba(0,0,0,.15);font:400 12px/1.3 var(--mono);max-height:min(60vh,470px);overflow:auto}
+.lyrPanel[hidden]{display:none}
+.lyrPanel .row{margin:0 0 9px}
+.lyrPanel label{display:flex;gap:6px;align-items:center;cursor:pointer;font-weight:600}
+.lyrPanel input[type=range]{width:100%;accent-color:var(--fg)}
+.lyrPanel .sub{display:flex;gap:6px;align-items:center;color:var(--muted);font-size:11px;margin-top:3px}
+.lyrPanel .hd{font:500 10.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:10px 0 7px;border-top:1px solid var(--rule);padding-top:9px}
+.lyrPanel .hd:first-child{border-top:0;padding-top:0;margin-top:0}
+.lyrPanel .reset{font:400 11px var(--mono);color:var(--muted);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline}
+.loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:400 13px var(--mono);color:var(--muted);z-index:1;text-align:center;padding:20px}
+.fallback{position:absolute;inset:0;width:100%;height:100%}
+.fbnote{position:absolute;left:10px;bottom:10px;right:10px;font:400 12px/1.4 var(--mono);color:var(--muted);background:color-mix(in srgb,var(--card) 92%,transparent);padding:6px 9px;border:1px solid var(--border);border-radius:3px;pointer-events:none}
+.legend{display:flex;gap:6px 14px;flex-wrap:wrap;font:400 12px/1.3 var(--mono);color:var(--muted);margin-top:8px;align-items:center}
+.legend span{display:inline-flex;align-items:center}
+.legend i{display:inline-block;width:11px;height:11px;margin-right:6px;border-radius:50%;border:1px solid rgba(0,0,0,.12)}
+.legend i.ln{height:0;border:0;border-top:2px solid;width:18px;border-radius:0}
+.legend i.sq{border-radius:2px;width:14px}
+.pull{font:600 26px/1.25 var(--display);border-left:6px solid var(--red);padding:4px 0 4px 18px;margin:30px 0}
+.note{background:var(--panel);border:1px solid var(--rule);padding:14px 16px;font-size:16px;margin:22px 0}
+table.tbl{width:100%;border-collapse:collapse;font:400 13px/1.4 var(--mono)}
+table.tbl th{font:500 11px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left;padding:6px 6px 6px 0;border-bottom:2px solid var(--fg);white-space:nowrap;position:sticky;top:0;background:var(--card)}
+table.tbl td{padding:6px 6px 6px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+table.tbl td.r,table.tbl th.r{text-align:right;white-space:nowrap}
+table.tbl tr[data-k]{cursor:pointer}
+table.tbl tr[data-k]:hover td{background:var(--panel)}
+.tablebox{max-height:460px;overflow:auto;border:1px solid var(--border);background:var(--card);padding:0 10px}
+.natbox{position:relative}
+.natbox img{display:block;width:100%;height:auto;border:1px solid var(--border)}
+.natbox svg{position:absolute;inset:0;width:100%;height:100%}
+.photo{display:block;width:100%;height:auto;border:1px solid var(--border)}
+details{margin:14px 0}
+summary{font:500 13px/1.4 var(--mono);cursor:pointer;color:var(--fg);padding:8px 0}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+.cta a{font:500 13px/1 var(--mono);text-decoration:none;border:1px solid var(--fg);padding:11px 14px;border-radius:3px}
+.cta a.p{background:var(--red);border-color:var(--red);color:#fff}
+footer{border-top:6px double var(--fg);margin-top:56px;padding-top:16px;font:400 13px/1.55 var(--mono);color:var(--muted)}
+footer p{margin:0 0 10px}
+.theme{position:fixed;right:12px;bottom:12px;z-index:1002}
+[hidden]{display:none!important}
+@media print{.theme,.controls{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="kicker"><b>Data study</b><span>History</span><span>Japan, {{facts.first_survey|raw}} to {{facts.completed|raw}}</span></div>
+<header class="hero">
+  <h1>Ino's <span>Japan</span></h1>
+  <svg class="mark" viewBox="0 0 120 120" aria-hidden="true"><g id="heroMark"></g></svg>
+  <p class="dek">In {{facts.first_survey|raw}}, at the age of {{facts.start_age|raw}}, a retired sake brewer called Ino Tadataka set out to measure Japan on foot. Over {{facts.years|raw}} years and about {{facts.walk_km|int}} km his teams paced and chained the coasts and roads, and in {{facts.completed|raw}} the survey became the first map of the whole country drawn from measurement. How close did he get? I put {{source.located|int}} sheets of his large-scale map back on a modern map to find out.</p>
+</header>
+<div class="byline">Dr Tristan Hotham · Independent researcher · 2026 · Sources: Library of Congress (sheets 1 to 40, via Wikimedia Commons); the 1878 Army General Staff map; Natural Earth</div>
+
+<div class="stats">
+  <div><b class="a">{{coast.median_of_sheets_m|int}} m</b><span>median gap between a sheet's drawn coast and today's, after one shift and one turn</span></div>
+  <div><b class="b">{{coast.km|int}} km</b><span>of drawn coast measured, on {{source.located|int}} sheets of the far north</span></div>
+  <div><b class="c">{{coast.within1000_median_pct|int}}%</b><span>of a typical sheet's coast lies within a kilometre of the modern line</span></div>
+  <div><b class="d">{{distortion.rot_abs_median|f1}}°</b><span>median tilt away from true north, on sheets whose coast fixes the angle</span></div>
+</div>
+
+<p class="lede">Most old maps in this series are wonderful and wrong. This one is the opposite. Ino Tadataka married into a sake brewing family in Sawara, east of Edo, ran the business for decades, and only after retiring went to Edo to study astronomy. From {{facts.first_survey|raw}} he led a series of surveys that walked the coast of Japan with measuring chains, compasses and a quadrant for the stars, fixing latitudes at night and distances by day. He died before the map was finished; his team completed it in {{facts.completed|raw}}: {{facts.total_sheets|int}} large sheets at 1:{{facts.scale_main|int}}, with the far north at 1:{{facts.scale_hokkaido|int}}, plus medium and small versions.</p>
+<p>The Library of Congress holds a manuscript copy of the large sheets, and Wikimedia Commons has photographs of sheets 1 to {{source.last_sheet|int}}. Those {{source.n_sheets|int}} sheets, {{source.pct_of_set|f1}}% of the whole, are what this study uses. They all show the far north: Hokkaido, the southern Kurils and a strip of Sakhalin. I found where each sheet belongs by matching its drawn coastline to the modern one, then measured how far the drawn coast and {{ctrl.n|int}} control points sit from where they really are. Pick a sheet below to see it beside today's map.</p>
+
+<h2><span class="n">01 · Sheet by sheet</span>The survey and the coast today</h2>
+<div class="bleed" id="atlas">
+<div class="controls"><label class="ctl-l" for="pick">Sheet</label><select id="pick" aria-label="Choose a sheet"></select><div class="scrollrow" id="regRow"><span class="ctl-l">Region</span></div></div>
+<div class="twin">
+  <div><div class="mapcap"><span><b>The sheet as drawn</b> · Library of Congress copy</span><span id="sName">sheet</span></div>
+    <div id="smap" class="lmap" data-fullscreen-map role="application" aria-label="The selected sheet of Ino's map, zoomable, with its control points"><div class="loading">Loading the sheet...</div></div></div>
+  <div><div class="mapcap"><span><b>The same coast today</b> · north at the top</span><span>Natural Earth</span></div>
+    <div id="wmap" class="lmap" data-fullscreen-map role="application" aria-label="Modern map of Hokkaido with the footprints of the sheets and the selected sheet laid on top"><div class="loading">Loading the modern map...</div></div></div>
+</div>
+<div class="legend" id="legend"></div>
+<div class="side" id="side" aria-live="polite"></div>
+<p class="src">Left: the sheet in its own pixels, with its control points (open circles: capes I picked by eye; dots: coast windows matched automatically). Right: the sheet laid on the modern map by the coastline fit (change its opacity in Map layers), with today's coast drawn on top in teal and arrows from where the sheet puts each control point to where it really is. Coloured boxes: the other located sheets; click one to switch. Sources: Library of Congress, Geography and Map Division (public domain, via Wikimedia Commons); Natural Earth.</p>
+</div>
+
+<h2><span class="n">02 · How close</span>Within a few hundred metres, sheet after sheet</h2>
+<p>To measure a sheet I kept its scale fixed at the nominal 1:{{facts.scale_hokkaido|int}} and allowed it only one shift and one turn, the best that lays its drawn coast on Natural Earth's modern coast. Then I measured, every kilometre along the drawn coast, how far it lies from the modern line. On a typical sheet the median gap is {{coast.median_of_sheets_m|int}} m; {{coast.within500_median_pct|int}}% of its coast is within 500 m and {{coast.within1000_median_pct|int}}% within a kilometre. On the paper that is about {{expect.coast_mm|f1}} mm. The closest sheet, number {{coast.best_sheet|int}} ({{coast.best_place|raw}}), is a median {{coast.best_m|int}} m out; the furthest, number {{coast.worst_sheet|int}} ({{coast.worst_place|raw}}), {{coast.worst_m|int}} m. {{coast.sheets_under_300|int}} of the {{source.located|int}} sheets are under 300 m.</p>
+<div class="figure"><p class="fig-h">Gap between each sheet's drawn coast and today's coast</p><p class="fig-sub">Median distance, in metres, from points every kilometre along the drawn coast to Natural Earth's coast, after one shift and one turn per sheet. Coloured by region. Hover or tap a bar; click to open the sheet.</p><div class="chart" id="coastChart"></div><div class="legend" id="coastLegend"></div></div>
+<div class="pull">Half a millimetre on the sheet is {{expect.draw_m|int}} m on the ground. The typical gap is about {{expect.coast_x_draw|int}} times that.</div>
+<p>That gap is an upper bound on Ino's error, not a measure of it. Three things add to it besides the survey: the copyists who made the Library of Congress set, the paper's shrinking and folding, and above all the modern line itself. Natural Earth's 1:10m coast is drawn for maps of whole countries; it smooths away small bays and spits, and in places it is several hundred metres from the real shore. A better modern coastline would shrink these numbers, never grow them.</p>
+
+<h2><span class="n">03 · Control points</span>Capes, spits and bends</h2>
+<p>A coastline fixes position across the shore but not along it: a straight beach can slide without the gap changing. For position in both directions I used control points. I picked {{ctrl.hand|int}} capes, spit tips and bends by eye where the sheet and the modern line both show the same feature, and the fit found {{ctrl.auto|int}} more automatically: stretches of {{method.window_km|int}} km of drawn coast that curve enough to be matched to the modern coast without sliding. That is {{ctrl.n|int}} in all, on {{ctrl.sheets|int}} sheets, well short of the {{ctrl.target|int}} I aimed for: Hokkaido's long smooth beaches and the generalised modern coast leave few features that can be matched with confidence.</p>
+<p>Measured against each sheet's coastline fit, the control points lie a median {{ctrl.median_m|int}} m from their true positions; {{ctrl.under_1000_pct|int}}% are within a kilometre. Cape Nosappu, the easternmost point of Hokkaido, is {{ctrl.named.Cape Nosappu.res_m|int}} m out; Cape Notoro {{ctrl.named.Cape Notoro.res_m|int}} m; the tip of the Notsuke spit {{ctrl.named.Notsuke spit tip.res_m|int}} m. The largest is Cape Erimo, {{ctrl.named.Cape Erimo.res_m|int}} m, where the sheet draws the point running further out to sea than the modern outline does.</p>
+<div class="figure"><p class="fig-h">How far the coast and the control points lie from the modern positions</p><p class="fig-sub">Red: share of all drawn coast points at each distance from today's coast. Blue: the {{ctrl.n|int}} control points. 100 m bins; the last bin includes everything beyond.</p><div class="chart" id="spreadChart"></div><div class="legend"><span><i class="sq" style="background:var(--red)"></i>drawn coast</span><span><i class="sq" style="background:var(--blue)"></i>control points</span></div></div>
+<p>Do the sheets bend as well as shift? On the {{fitq.sim_sheets|int}} sheets with at least four control points, a fit with one shift, one turn and one scale predicts a left-out point to a median {{fitq.sim_loo_median_m|int}} m. Allowing a full affine stretch, on the {{fitq.aff_sheets|int}} sheets with six or more points, does no better ({{fitq.aff_loo_median_m|int}} m against {{fitq.sim_loo_on_aff_sheets_m|int}} m for the simpler fit on the same sheets), and a curved, second-order fit, possible on only {{fitq.quad_sheets|int}} sheets, does worse ({{fitq.quad_loo_m|int}} m against {{fitq.aff_loo_on_quad_sheets_m|int}} m). Within a sheet, the control points show no distortion beyond their own noise.</p>
+
+<h2><span class="n">04 · Distortion</span>Square to north, true to scale</h2>
+<p>Each sheet's best turn says how far its north is from true north. On the {{distortion.rot_n|int}} sheets whose coast curves enough to fix the angle, the median tilt is {{distortion.rot_median|f1}} degrees and {{distortion.rot_within2|int}} are within two degrees, from {{distortion.rot_min|f1}} to {{distortion.rot_max|f1}}. The scale holds too. Calibrated on one sheet (Notsuke), the best-fitting scale of the {{distortion.scale_n|int}} sheets with six or more control points ranges from {{distortion.scale_min|f2}} to {{distortion.scale_max|f2}} times the nominal: the sheets agree with each other to within {{distortion.scale_dev_pct|int}}%.</p>
+<div class="figure"><p class="fig-h">Tilt from true north, sheet by sheet</p><p class="fig-sub">Rotation of the best fit, in degrees; filled dots are sheets whose coast fixes the angle well, open dots straight coasts where it is loose. Hover a dot.</p><div class="chart" id="rotChart"></div></div>
+<div class="figure"><p class="fig-h">Every sheet, measured</p><p class="fig-sub">Click a row to open the sheet above. Gap: median distance of the drawn coast from today's; points: control points; error: their median distance from the true positions.</p><div class="tablebox"><table class="tbl" id="sheetTable"></table></div></div>
+
+<h2><span class="n">05 · The whole country</span>Latitude, longitude and the 1878 map</h2>
+<p>The large sheets have no grid of latitude and longitude, so they cannot say where Ino put Hokkaido as a whole. For that I used a map of the whole of Japan published by the Army General Staff in 1878 and compiled from Ino's survey. I picked {{national.n|int}} capes and island centres on it, from Tsushima to Todoga-saki, the easternmost point of Honshu, and laid it on a modern map with the best shift, turn and scale. The median point is {{national.median_km|f1}} km from its true position, {{national.max_km|f1}} km at most ({{national.max_feature|raw}}).</p>
+<div class="figure"><p class="fig-h">The 1878 map, with each point's error</p><p class="fig-sub">Arrows run from the map's position to the true one, drawn ten times longer. Hover a point.</p><div class="natbox" id="natBox"><img src="img/whole1878.jpg" alt="The 1878 Army General Staff map of Japan with red arrows at capes and islands" loading="lazy" width="1885" height="1782"></div></div>
+<p>Ino fixed latitudes by the stars and worked longitudes out from his traverses, so the story goes that his north and south were good and his east and west drifted. At this scale I cannot see that. The north-south errors (root mean square {{national.rms_ns_km|f1}} km) and east-west errors ({{national.rms_ew_km|f1}} km) are the same size, about {{national.dlat_abs_median_min|f1}} and {{national.dlon_abs_median_min|f1}} minutes of arc on a typical point, and both are close to what my picking on a {{national.km_per_px|f2}} km-per-pixel image can resolve (three pixels is {{national.pick_km|f1}} km). The one hint is a stretch: if east-west and north-south scales are fitted separately, east-west distances come out {{national.ew_stretch_pct|f1}}% longer (95% interval {{national.ci_lo_pct|f1}} to {{national.ci_hi_pct|f1}}%). Across the length of Japan that would add up to tens of kilometres, but it could equally come from the projection the 1878 compilers chose, which I cannot read at this resolution.</p>
+<div class="figure"><p class="fig-h">East-west and north-south errors across the country</p><p class="fig-sub">Error of each point after the best shift, turn and scale, in km, against its longitude. Hover a point.</p><div class="chart" id="natChart"></div><div class="legend"><span><i style="background:var(--blue)"></i>east-west</span><span><i class="sq" style="background:var(--gold)"></i>north-south</span></div></div>
+
+<h2><span class="n">06 · What is here</span>{{source.n_sheets|int}} sheets of {{facts.total_sheets|int}}</h2>
+<p>This is a small and particular slice of the map. The {{source.n_sheets|int}} sheets are the first in the set's numbering and all show the far north, at the smaller Hokkaido scale. None shows Honshu, Shikoku or Kyushu, where Ino surveyed most densely, so the results say nothing directly about the 1:{{facts.scale_main|int}} sheets of the main islands. Of the {{source.n_sheets|int}}, I placed {{source.located|int}}; {{source.drafts|int}} are unfinished pencil drafts of inland routes, and the rest are almost blank or show too little coast to place with confidence. Ino walked Hokkaido's Pacific coast himself on his first survey in {{facts.first_survey|raw}}; much of the rest of the north on the finished map, including the Kurils and Sakhalin, is usually credited to the surveyor Mamiya Rinzo, so these sheets measure Ino's map rather than only his own legs.</p>
+<figure class="figure"><img class="photo" src="img/replica.jpg" alt="A full-size replica of all the large sheets laid out on a sports hall floor, with visitors walking and kneeling on the map" loading="lazy" width="960" height="1280"><figcaption class="src">A full-size replica of the large sheets laid out on a sports hall floor. Photograph: Wikimedia Commons, "Inoh taizu 01.jpg".</figcaption></figure>
+
+<h2><span class="n">07 · How I did this</span>Methods and caveats</h2>
+<p><b>The sheets.</b> Photographs of sheets 1 to {{source.last_sheet|int}} of the Library of Congress manuscript copy, from Wikimedia Commons, reduced to {{method.width_px|int}} pixels wide. I picked out the drawn coast by colour: dark or red ink lines next to the green hachures that mark land, in strokes long enough not to be labels.</p>
+<p><b>Placing the sheets.</b> A brute-force search tried every position, a range of turns and three scales for each sheet and scored how well its land and sea fell on modern land and sea; I checked the best placements by eye and kept {{source.located|int}}. Each was then fitted to Natural Earth's 1:10m coast by iterative closest point, allowing one shift and one turn with the scale fixed. The scale comes from one sheet (Notsuke, whose hooked spit fixes it) and is carried to the others by the known size of each photograph.</p>
+<p><b>Control points.</b> {{ctrl.hand|int}} capes, spit tips and bends picked by eye on the sheet and on the modern outline, and {{ctrl.auto|int}} stretches of drawn coast, {{method.window_km|int}} km across, matched to the modern coast by a local shift where the coast curves enough to fix the shift in both directions. Their errors are measured against each sheet's coastline fit, which does not use them.</p>
+<p><b>The 1878 map.</b> {{national.n|int}} points picked by eye on a {{method.nat_w|int}} pixel photograph, fitted by the best shift, turn and scale on a conformal projection; errors are split into north-south and east-west parts.</p>
+<p><b>What this is not.</b> A measure of Ino's survey alone: the errors include the copy, the paper, the photographs, my picking and, most of all, the generalised modern coast. A test of the main islands: there are none in this set. A test of absolute position: the large sheets carry no latitude and longitude, so each is fitted on its own.</p>
+<details><summary>Sources and licences</summary>
+<ul>
+<li>Ino Tadataka and team, Dai Nihon Enkai Yochi Zenzu, large-scale sheets 1 to {{source.last_sheet|int}}, manuscript copy, Library of Congress Geography and Map Division (item 2001620020). Public domain; photographs via Wikimedia Commons.</li>
+<li>Dai Nihon Zenzu, Army General Staff Bureau, 1878. Public domain, via Wikimedia Commons.</li>
+<li>Replica photograph: Wikimedia Commons, "Inoh taizu 01.jpg".</li>
+<li>Natural Earth 1:10m and 1:50m countries (public domain). Optional shaded relief tiles © Esri.</li>
+</ul></details>
+
+<div class="cta"><a class="p" href="https://doi.org/10.5281/zenodo.23882609">Read the paper</a><a href="https://github.com/Tristan-Hotham/ino-japan">Data and code</a><a href="https://blog.tristanhotham.com/2026/10/31/ino-japan/">Blog post</a></div>
+
+<footer>
+<p>Dr Tristan Hotham, Independent researcher. ORCID <a href="https://orcid.org/0000-0003-4931-9349">0000-0003-4931-9349</a>.</p>
+<p>Cite as: Hotham, T. (2026) Ino's Japan: how close did the survey map of 1821 get? Zenodo. <a href="https://doi.org/10.5281/zenodo.23882609">https://doi.org/10.5281/zenodo.23882609</a></p>
+<p>Licence: code MIT; text, figures and derived data CC BY 4.0. The map images are in the public domain; Natural Earth is public domain.</p>
+<p>I wrote the text, with drafting and editing assistance from Claude (Anthropic), which also helped prepare the analysis code. I reviewed and checked all text and results.</p>
+</footer>
+</div>
+<div class="tip" id="tip"></div>
+<button class="btn theme" id="theme" aria-label="Toggle dark mode">◐</button>
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script>
+const R = /*RESULTS*/;
+const SITE = /*SITE*/;
+const JAPAN = /*JAPAN*/;
+const WORLD = /*WORLD*/;
+const fmt = n => n == null || n === "" ? "n/a" : Math.round(n).toLocaleString("en-GB");
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const tip = document.getElementById("tip");
+function showTip(h, x, y) { tip.innerHTML = h; tip.style.display = "block"; const w = tip.offsetWidth; x = Math.max(w / 2 + 8, Math.min(innerWidth - w / 2 - 8, x)); tip.style.left = x + scrollX + "px"; tip.style.top = y + scrollY + "px"; }
+function hideTip() { tip.style.display = "none"; }
+document.addEventListener("click", e => { if (!e.target.closest("svg")) hideTip(); });
+const NS = "http://www.w3.org/2000/svg";
+const el = (t, a, p) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; };
+const lbl = (svg, x, y, s, cls = "lab", anchor = "start") => { const t = el("text", { x, y, class: cls, "text-anchor": anchor }, svg); t.textContent = s; return t; };
+const redraws = [];
+function resp(box, render) { let last = 0; const go = force => { const w = Math.max(280, Math.round(box.clientWidth)); if (!force && Math.abs(w - last) < 4) return; last = w; box.innerHTML = ""; render(w, w < 560); }; new ResizeObserver(() => go()).observe(box); go(); redraws.push(() => go(true)); }
+const isDark = () => { const r = document.documentElement; return r.dataset.theme ? r.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches; };
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const small = () => innerWidth < 860;
+const SH = SITE.sheets, LOCS = SH.filter(s => s.status === "located");
+const PC = {}; SITE.pt_cols.forEach((k, i) => PC[k] = i);
+const RC = {}; SITE.regions.forEach(r => RC[r[0]] = r[1]);
+const byId = {}; SH.forEach(s => byId[s.id] = s);
+
+/* hero mark: a surveyor's chain walking a coast */
+(function () {
+  const g = document.getElementById("heroMark");
+  el("path", { d: "M12 96 C30 90 34 70 50 64 C66 58 70 40 86 34 C96 30 102 22 108 14", fill: "none", stroke: "currentColor", "stroke-width": 3 }, g);
+  [[12, 96], [31, 86], [50, 64], [69, 47], [86, 34], [108, 14]].forEach((p, i) => el("circle", { cx: p[0], cy: p[1], r: i % 5 === 0 ? 6 : 4, fill: i % 5 === 0 ? "#B8322A" : "#4E7D5B" }, g));
+  el("path", { d: "M18 108 L102 108", stroke: "#2F4F86", "stroke-width": 3, opacity: .6 }, g);
+})();
+
+/* ---------- state ---------- */
+const S = { sheet: 6, pt: null, reg: null };
+let FB = null;
+const LYDEF = { overlay: true, overlayK: 55, pts: true, arrows: true, foot: true, relief: false, reliefK: 35, spts: true };
+const LY = { ...LYDEF };
+try { Object.assign(LY, JSON.parse(localStorage.getItem("ino_layers2") || "{}")); } catch (e) {}
+const saveLY = () => { try { localStorage.setItem("ino_layers2", JSON.stringify(LY)); } catch (e) {} };
+function pal() { const d = isDark(); return { sea: css("--sea"), land: css("--land"), ink: css("--fg"), panel: css("--panel"), red: d ? "#F07B66" : "#B8322A", blue: d ? "#8FAAE0" : "#2F4F86" }; }
+
+/* sheet pixels -> pseudo coordinates for the left map (the image is laid on Web Mercator) */
+const HW = 60;
+const frame = s => { const HH = HW * s.h / s.w; return { HH, px2ll: (x, y) => { const lon = -HW + 2 * HW * x / s.w, my = (HH - 2 * HH * y / s.h) * Math.PI / 180; return [lon, (2 * Math.atan(Math.exp(my)) - Math.PI / 2) * 180 / Math.PI]; } }; };
+const cur = () => byId[S.sheet];
+const sbounds = s => { const f = frame(s); return [f.px2ll(0, s.h), f.px2ll(s.w, 0)]; };
+
+function ptFeatures(geo) {
+  const s = cur(); if (!s || !s.pts) return { type: "FeatureCollection", features: [] }; const f = frame(s);
+  return { type: "FeatureCollection", features: s.pts.map((p, i) => ({ type: "Feature", id: i, properties: { i, hand: p[PC.source] === "hand" ? 1 : 0, r: p[PC.res_m] },
+    geometry: { type: "Point", coordinates: geo ? [p[PC.lon], p[PC.lat]] : f.px2ll(p[PC.x], p[PC.y]) } })) };
+}
+function arrowFeatures() { const s = cur(); if (!s || !s.pts) return { type: "FeatureCollection", features: [] };
+  return { type: "FeatureCollection", features: s.pts.map(p => ({ type: "Feature", properties: { hand: p[PC.source] === "hand" ? 1 : 0 }, geometry: { type: "LineString", coordinates: [[p[PC.map_lon], p[PC.map_lat]], [p[PC.lon], p[PC.lat]]] } })) }; }
+function footFeatures() { return { type: "FeatureCollection", features: LOCS.map(s => ({ type: "Feature", properties: { id: s.id, c: RC[s.region] || "#888", sel: s.id === S.sheet ? 1 : 0, on: !S.reg || S.reg === s.region ? 1 : 0 },
+  geometry: { type: "Polygon", coordinates: [[...s.corners, s.corners[0]]] } })) }; }
+function labFeatures() { return { type: "FeatureCollection", features: LOCS.map(s => ({ type: "Feature", properties: { id: s.id, c: RC[s.region] || "#888" }, geometry: { type: "Point", coordinates: [s.corners.reduce((a, c) => a + c[0], 0) / 4, s.corners.reduce((a, c) => a + c[1], 0) / 4] } })) }; }
+
+/* ---------- the two maps ---------- */
+let sm = null, wm = null, sReady = false, wReady = false, selPin = null;
+function startMaps() {
+  if (typeof maplibregl === "undefined") { fallback(); return; }
+  const P = pal(), s = cur();
+  try {
+    const B = sbounds(s);
+    sm = new maplibregl.Map({ container: "smap", bounds: B, fitBoundsOptions: { padding: 6 }, minZoom: 0, maxZoom: 7, renderWorldCopies: false,
+      attributionControl: { compact: true, customAttribution: "Sheet: Library of Congress (public domain)" }, dragRotate: false, pitchWithRotate: false, fadeDuration: 0,
+      style: { version: 8, sources: { sheet: { type: "image", url: s.img, coordinates: [frame(s).px2ll(0, 0), frame(s).px2ll(s.w, 0), frame(s).px2ll(s.w, s.h), frame(s).px2ll(0, s.h)] },
+        pts: { type: "geojson", data: ptFeatures(false) }, sel: { type: "geojson", data: { type: "FeatureCollection", features: [] } } },
+        layers: [{ id: "bg", type: "background", paint: { "background-color": P.panel } },
+          { id: "sheet", type: "raster", source: "sheet", paint: { "raster-fade-duration": 0 } },
+          { id: "pts", type: "circle", source: "pts", paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 0, ["case", ["==", ["get", "hand"], 1], 5, 3.5], 5, ["case", ["==", ["get", "hand"], 1], 10, 7]],
+            "circle-color": ["case", ["==", ["get", "hand"], 1], "rgba(0,0,0,0)", P.blue], "circle-stroke-color": ["case", ["==", ["get", "hand"], 1], P.blue, "#FFFFFF"], "circle-stroke-width": ["case", ["==", ["get", "hand"], 1], 2.4, 1.2] } },
+          { id: "sel", type: "circle", source: "sel", paint: { "circle-radius": 13, "circle-color": "rgba(0,0,0,0)", "circle-stroke-color": P.red, "circle-stroke-width": 3 } }] } });
+    sm.addControl(new maplibregl.NavigationControl({ showCompass: false }), "bottom-right");
+    sm.on("error", e => console.warn("sm", e && e.error && e.error.message));
+    sm.on("load", () => { sReady = true; document.querySelector("#smap .loading")?.remove(); applyLayers(); bindPts(sm); drawSel(); });
+    wm = new maplibregl.Map({ container: "wmap", center: [144, 43.6], zoom: small() ? 4.4 : 5.2, minZoom: 3, maxZoom: 13, renderWorldCopies: false, attributionControl: { compact: true },
+      dragRotate: false, pitchWithRotate: false, fadeDuration: 0,
+      style: { version: 8, sources: {
+        world: { type: "geojson", data: WORLD, attribution: "Natural Earth" }, japan: { type: "geojson", data: JAPAN },
+        relief: { type: "raster", tiles: ["https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}"], tileSize: 256, maxzoom: 13, attribution: "Relief: Esri" },
+        over: { type: "image", url: s.img, coordinates: s.corners }, foot: { type: "geojson", data: footFeatures() }, flab: { type: "geojson", data: labFeatures() },
+        arr: { type: "geojson", data: arrowFeatures() }, pts: { type: "geojson", data: ptFeatures(true) }, sel: { type: "geojson", data: { type: "FeatureCollection", features: [] } } },
+        layers: [{ id: "bg", type: "background", paint: { "background-color": P.sea } },
+          { id: "world", type: "fill", source: "world", filter: ["!", ["in", ["get", "iso"], ["literal", ["JPN", "RUS"]]]], paint: { "fill-color": P.land } },
+          { id: "land", type: "fill", source: "japan", paint: { "fill-color": P.land } },
+          { id: "relief", type: "raster", source: "relief", layout: { visibility: "none" }, paint: { "raster-opacity": LY.reliefK / 100 } },
+          { id: "foot", type: "fill", source: "foot", filter: ["==", ["get", "on"], 1], paint: { "fill-color": ["get", "c"], "fill-opacity": ["case", ["==", ["get", "sel"], 1], 0, .14] } },
+          { id: "footl", type: "line", source: "foot", filter: ["==", ["get", "on"], 1], paint: { "line-color": ["get", "c"], "line-width": ["case", ["==", ["get", "sel"], 1], 2.5, 1] } },
+          { id: "over", type: "raster", source: "over", paint: { "raster-opacity": LY.overlayK / 100, "raster-fade-duration": 0 } },
+          { id: "coast", type: "line", source: "japan", paint: { "line-color": isDark() ? "#5FC3D6" : "#127A8F", "line-width": 1.6 } },
+          { id: "arr", type: "line", source: "arr", layout: { "line-cap": "round" }, paint: { "line-color": P.red, "line-width": 2, "line-opacity": .9 } },
+          { id: "pts", type: "circle", source: "pts", paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 2.5, 10, 6], "circle-color": ["case", ["==", ["get", "hand"], 1], "rgba(0,0,0,0)", P.blue],
+            "circle-stroke-color": ["case", ["==", ["get", "hand"], 1], P.blue, "#FFFFFF"], "circle-stroke-width": ["case", ["==", ["get", "hand"], 1], 2.2, 1] } },
+          { id: "sel", type: "circle", source: "sel", paint: { "circle-radius": 11, "circle-color": "rgba(0,0,0,0)", "circle-stroke-color": P.red, "circle-stroke-width": 3 } }] } });
+    wm.addControl(new maplibregl.NavigationControl({ showCompass: false }), "bottom-right");
+    wm.on("error", e => { const m = e && e.error && e.error.message || ""; if (!/Failed to fetch|AJAXError|tile/i.test(m)) console.warn("wm", m); });
+    wm.on("load", () => { wReady = true; document.querySelector("#wmap .loading")?.remove(); applyLayers(); bindPts(wm);
+      wm.on("click", "foot", e => { const f = e.features[0]; if (f && f.properties.id !== S.sheet) pickSheet(f.properties.id); });
+      wm.on("mouseenter", "foot", () => wm.getCanvas().style.cursor = "pointer"); wm.on("mouseleave", "foot", () => wm.getCanvas().style.cursor = "");
+      flyW(); drawSel(); });
+    layersControl();
+  } catch (e) { console.warn(e); fallback(); }
+}
+function bindPts(map) {
+  map.on("click", "pts", e => { const f = e.features[0]; if (!f) return; S.pt = f.properties.i; drawSel(); side(); });
+  map.on("mouseenter", "pts", () => map.getCanvas().style.cursor = "pointer"); map.on("mouseleave", "pts", () => map.getCanvas().style.cursor = "");
+}
+function closeAttrib() { document.querySelectorAll(".maplibregl-ctrl-attrib.maplibregl-compact").forEach(a => { a.classList.remove("maplibregl-compact-show"); a.removeAttribute("open"); }); }
+function applyLayers() {
+  closeAttrib();
+  if (sReady) sm.setLayoutProperty("pts", "visibility", LY.spts ? "visible" : "none");
+  if (wReady) { wm.setLayoutProperty("over", "visibility", LY.overlay ? "visible" : "none"); wm.setPaintProperty("over", "raster-opacity", LY.overlayK / 100);
+    ["pts"].forEach(l => wm.setLayoutProperty(l, "visibility", LY.pts ? "visible" : "none")); wm.setLayoutProperty("arr", "visibility", LY.arrows ? "visible" : "none");
+    ["foot", "footl"].forEach(l => wm.setLayoutProperty(l, "visibility", LY.foot ? "visible" : "none"));
+    wm.setLayoutProperty("relief", "visibility", LY.relief ? "visible" : "none"); wm.setPaintProperty("relief", "raster-opacity", LY.reliefK / 100); }
+}
+function layersControl() {
+  const mk = (box, html) => { const w = document.createElement("div"); w.className = "lyrWrap";
+    w.innerHTML = `<button class="lyrBtn" aria-expanded="false">Map layers</button><div class="lyrPanel" hidden>${html}<button class="reset">Reset layers</button></div>`;
+    document.getElementById(box).appendChild(w);
+    const b = w.querySelector(".lyrBtn"), p = w.querySelector(".lyrPanel");
+    ["click", "dblclick", "mousedown", "touchstart", "wheel"].forEach(t => w.addEventListener(t, e => e.stopPropagation(), { passive: true }));
+    b.onclick = () => { const o = p.hidden; p.hidden = !o; b.setAttribute("aria-expanded", o); };
+    w.querySelectorAll("input[data-l][type=checkbox]").forEach(i => { i.checked = !!LY[i.dataset.l]; i.onchange = () => { LY[i.dataset.l] = i.checked; saveLY(); applyLayers(); if (FB) FB.draw(); }; });
+    w.querySelectorAll("input[data-l][type=range]").forEach(i => { i.value = LY[i.dataset.l]; i.oninput = () => { LY[i.dataset.l] = +i.value; saveLY(); applyLayers(); }; });
+    w.querySelector(".reset").onclick = () => { Object.assign(LY, LYDEF); saveLY(); w.querySelectorAll("input[data-l][type=checkbox]").forEach(i => i.checked = !!LY[i.dataset.l]); w.querySelectorAll("input[type=range]").forEach(i => i.value = LY[i.dataset.l]); applyLayers(); if (FB) FB.draw(); };
+  };
+  mk("smap", `<div class="hd">Sheet</div><div class="row"><label><input type="checkbox" data-l="spts">Control points</label></div>`);
+  mk("wmap", `<div class="hd">Selected sheet</div><div class="row"><label><input type="checkbox" data-l="overlay">Sheet laid on the map</label><div class="sub"><span>opacity</span><input type="range" min="10" max="100" data-l="overlayK" aria-label="Sheet opacity"></div></div>
+    <div class="row"><label><input type="checkbox" data-l="pts">Control points</label></div>
+    <div class="row"><label><input type="checkbox" data-l="arrows">Error arrows</label><div class="sub">from where the sheet puts a point to where it is</div></div>
+    <div class="hd">All sheets</div><div class="row"><label><input type="checkbox" data-l="foot">Sheet footprints</label></div>
+    <div class="row"><label><input type="checkbox" data-l="relief">Shaded relief (Esri)</label><div class="sub"><span>opacity</span><input type="range" min="10" max="80" data-l="reliefK" aria-label="Relief opacity"></div></div>`);
+}
+function flyW() { const s = cur(); if (!wReady || !s.corners) return; const xs = s.corners.map(c => c[0]), ys = s.corners.map(c => c[1]);
+  wm.fitBounds([[Math.min(...xs), Math.min(...ys)], [Math.max(...xs), Math.max(...ys)]], { padding: 20, duration: 800 }); }
+function pickSheet(id) {
+  S.sheet = id; S.pt = null; const s = cur();
+  document.getElementById("pick").value = id; document.getElementById("sName").textContent = `sheet ${id}`;
+  if (sReady) { const f = frame(s); sm.getSource("sheet").updateImage({ url: s.img, coordinates: [f.px2ll(0, 0), f.px2ll(s.w, 0), f.px2ll(s.w, s.h), f.px2ll(0, s.h)] });
+    sm.getSource("pts").setData(ptFeatures(false)); sm.fitBounds(sbounds(s), { padding: 6, duration: 0 }); }
+  if (wReady) { wm.getSource("over").updateImage({ url: s.img, coordinates: s.corners }); wm.getSource("pts").setData(ptFeatures(true)); wm.getSource("arr").setData(arrowFeatures());
+    wm.getSource("foot").setData(footFeatures()); flyW(); }
+  drawSel(); side(); if (FB) FB.draw(); syncTable();
+}
+window.pickSheet = pickSheet;
+function drawSel() {
+  const s = cur(), e = { type: "FeatureCollection", features: [] };
+  const p = S.pt != null && s.pts ? s.pts[S.pt] : null;
+  if (sReady) sm.getSource("sel").setData(p ? { type: "FeatureCollection", features: [{ type: "Feature", properties: {}, geometry: { type: "Point", coordinates: frame(s).px2ll(p[PC.x], p[PC.y]) } }] } : e);
+  if (wReady) wm.getSource("sel").setData(p ? { type: "FeatureCollection", features: [{ type: "Feature", properties: {}, geometry: { type: "Point", coordinates: [p[PC.lon], p[PC.lat]] } }] } : e);
+}
+const dirName = d => ["north", "north-east", "east", "south-east", "south", "south-west", "west", "north-west"][Math.round(d / 45) % 8];
+function side() {
+  const box = document.getElementById("side"), s = cur();
+  let h = `<div class="sub"><span class="chip" style="background:${RC[s.region] || "#888"}"></span>${esc(s.region)} · sheet ${s.id} of the Library of Congress set</div><div class="big">${esc(s.place)}</div>
+    <table><tr><td>Drawn coast</td><td>${fmt(s.coast_km)} km measured; a median ${fmt(s.coast_median_m)} m from today's coast; ${Math.round(s.coast_within_500_pct)}% within 500 m</td></tr>
+    <tr><td>Fit</td><td>turned ${s.rotation_deg > 0 ? "anticlockwise" : "clockwise"} ${Math.abs(s.rotation_deg).toFixed(1)}° from true north${s.coast_cond < .15 ? " (a straight coast: the angle is loose)" : ""}</td></tr>
+    <tr><td>Control points</td><td>${s.n_ctrl ? `${s.n_ctrl}, a median ${fmt(s.ctrl_rigid_median_m)} m from their true positions` : "none: the coast here has no feature both maps share"}</td></tr></table>`;
+  const p = S.pt != null && s.pts ? s.pts[S.pt] : null;
+  if (p) h += `<div class="pt"><b>${p[PC.source] === "hand" ? esc(p[PC.note] || "A " + p[PC.kind]) + " (picked by eye, " + esc(p[PC.conf]) + " confidence)" : "Coast window " + esc(p[PC.id]) + " (matched automatically)"}</b><br>
+    The sheet puts it ${fmt(p[PC.res_m])} m from its true position; it really lies to the ${dirName(p[PC.res_dir])}. Today: ${p[PC.lat].toFixed(3)} N, ${p[PC.lon].toFixed(3)} E.</div>`;
+  else h += `<div class="sub" style="margin-top:8px">Click a control point on either map for its error, or a coloured box on the right to switch sheet.</div>`;
+  box.innerHTML = h;
+}
+
+/* ---------- controls ---------- */
+(function controls() {
+  const sel = document.getElementById("pick");
+  sel.innerHTML = LOCS.map(s => `<option value="${s.id}">${s.id} · ${esc(s.place)}</option>`).join("");
+  sel.value = S.sheet; sel.onchange = () => pickSheet(+sel.value);
+  const row = document.getElementById("regRow");
+  const all = document.createElement("button"); all.className = "btn"; all.textContent = "All"; all.setAttribute("aria-pressed", "true"); row.appendChild(all);
+  const set = r => { S.reg = r; row.querySelectorAll(".btn").forEach(b => b.setAttribute("aria-pressed", (b.dataset.r || null) === (r || null) ? "true" : "false"));
+    if (wReady) { wm.getSource("foot").setData(footFeatures()); const L = LOCS.filter(s => !r || s.region === r); const xs = L.flatMap(s => s.corners.map(c => c[0])), ys = L.flatMap(s => s.corners.map(c => c[1]));
+      wm.fitBounds([[Math.min(...xs), Math.min(...ys)], [Math.max(...xs), Math.max(...ys)]], { padding: 20, duration: 800 }); }
+    if (r && cur().region !== r) pickSheet(LOCS.find(s => s.region === r).id); };
+  all.onclick = () => set(null);
+  SITE.regions.forEach(([r, c]) => { const b = document.createElement("button"); b.className = "btn"; b.dataset.r = r; b.innerHTML = `<i style="background:${c}"></i>${esc(r)}`; row.appendChild(b); b.onclick = () => set(r); });
+  document.getElementById("legend").innerHTML = `<span><i style="background:transparent;border:2px solid var(--blue)"></i>control point picked by eye</span><span><i style="background:var(--blue)"></i>coast window</span><span><i class="ln" style="border-color:var(--red)"></i>error arrow</span><span><i class="ln" style="border-color:#127A8F"></i>today's coast (Natural Earth)</span>` +
+    SITE.regions.map(([r, c]) => `<span><i class="sq" style="background:${c};opacity:.6"></i>${esc(r)}</span>`).join("");
+})();
+
+/* ---------- fallback: no map library ---------- */
+function fallback() {
+  const sbox = document.getElementById("smap"), wbox = document.getElementById("wmap");
+  [sbox, wbox].forEach(b => b.querySelector(".loading")?.remove());
+  const mk = (box, note) => { const cv = document.createElement("canvas"); cv.className = "fallback"; box.appendChild(cv); const n = document.createElement("div"); n.className = "fbnote"; n.textContent = note; box.appendChild(n); return cv; };
+  const sc = mk(sbox, "The map library did not load, so this is a still view. Pick a sheet above."), wc = mk(wbox, "Still view of the modern map (Natural Earth). Click a box to pick a sheet.");
+  let img = new Image(), imgId = null;
+  const geo = { lo0: 139.2, lo1: 148.6, la0: 41.5, la1: 46.7 }; let wT = null;
+  const draw = () => {
+    const s = cur(), d = devicePixelRatio || 1, P = pal();
+    if (imgId !== s.id) { img = new Image(); img.onload = draw; img.src = s.img; imgId = s.id; }
+    { const W = sbox.clientWidth, H = sbox.clientHeight; sc.width = W * d; sc.height = H * d; const x = sc.getContext("2d"); x.setTransform(d, 0, 0, d, 0, 0);
+      x.fillStyle = P.panel; x.fillRect(0, 0, W, H); const k = Math.min(W / s.w, H / s.h), ox = (W - s.w * k) / 2, oy = (H - s.h * k) / 2;
+      if (img.complete && img.naturalWidth) x.drawImage(img, ox, oy, s.w * k, s.h * k);
+      if (LY.spts) (s.pts || []).forEach(p => { x.beginPath(); x.arc(ox + p[PC.x] * k, oy + p[PC.y] * k, 4, 0, 7); x.strokeStyle = P.blue; x.lineWidth = 2; x.stroke(); }); }
+    { const W = wbox.clientWidth, H = wbox.clientHeight; wc.width = W * d; wc.height = H * d; const x = wc.getContext("2d"); x.setTransform(d, 0, 0, d, 0, 0);
+      const cl = Math.cos(44 * Math.PI / 180), k = Math.min(W / ((geo.lo1 - geo.lo0) * cl), H / (geo.la1 - geo.la0)), ox = (W - k * (geo.lo1 - geo.lo0) * cl) / 2, oy = (H - k * (geo.la1 - geo.la0)) / 2; wT = { k, ox, oy, cl };
+      const Pt = (lo, la) => [ox + (lo - geo.lo0) * cl * k, oy + (geo.la1 - la) * k];
+      x.fillStyle = P.sea; x.fillRect(0, 0, W, H); x.fillStyle = P.land;
+      [WORLD, JAPAN].forEach(G => G.features.forEach(f => { const g = f.geometry, polys = g.type === "Polygon" ? [g.coordinates] : g.coordinates; polys.forEach(pg => { x.beginPath(); pg[0].forEach((c, j) => { const [a, b] = Pt(c[0], c[1]); j ? x.lineTo(a, b) : x.moveTo(a, b); }); x.fill(); }); }));
+      LOCS.forEach(t => { x.beginPath(); t.corners.forEach((c, j) => { const [a, b] = Pt(c[0], c[1]); j ? x.lineTo(a, b) : x.moveTo(a, b); }); x.closePath(); x.globalAlpha = t.id === s.id ? .35 : .12; x.fillStyle = RC[t.region]; x.fill(); x.globalAlpha = 1; x.strokeStyle = RC[t.region]; x.lineWidth = t.id === s.id ? 2.5 : 1; x.stroke(); }); }
+  };
+  wc.addEventListener("click", e => { const b = wbox.getBoundingClientRect(), mx = e.clientX - b.left, my = e.clientY - b.top; const lo = geo.lo0 + (mx - wT.ox) / (wT.k * wT.cl), la = geo.la1 - (my - wT.oy) / wT.k;
+    const hit = LOCS.find(t => { let inside = false; const c = t.corners; for (let i = 0, j = 3; i < 4; j = i++) { if (((c[i][1] > la) !== (c[j][1] > la)) && (lo < (c[j][0] - c[i][0]) * (la - c[i][1]) / (c[j][1] - c[i][1]) + c[i][0])) inside = !inside; } return inside; });
+    if (hit) pickSheet(hit.id); });
+  draw(); new ResizeObserver(draw).observe(sbox); new ResizeObserver(draw).observe(wbox); redraws.push(draw);
+  FB = { draw };
+}
+
+/* ---------- charts ---------- */
+function coastChart() {
+  const box = document.getElementById("coastChart"); const D = LOCS.slice().sort((a, b) => a.coast_median_m - b.coast_median_m);
+  resp(box, (W, sm_) => { const lw = sm_ ? 150 : 230, rh = sm_ ? 19 : 21, top = 6, H = top + D.length * rh + 30, svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Median coast gap by sheet" }, box);
+    const mx = 700, x = v => lw + v / mx * (W - lw - 44);
+    [0, 200, 400, 600].forEach(v => { el("line", { x1: x(v), x2: x(v), y1: top, y2: top + D.length * rh, stroke: css("--rule") }, svg); lbl(svg, x(v), H - 14, v + " m", "lab s m", "middle"); });
+    el("line", { x1: x(R.expect.draw_m), x2: x(R.expect.draw_m), y1: top, y2: top + D.length * rh, stroke: css("--fg"), "stroke-dasharray": "2 3" }, svg);
+    D.forEach((s, i) => { const y = top + i * rh; lbl(svg, lw - 8, y + rh / 2 + 4, `${s.id} ${s.place}`.slice(0, sm_ ? 20 : 34), "lab s", "end");
+      const r = el("rect", { x: x(0), y: y + 3, width: x(s.coast_median_m) - x(0), height: rh - 6, fill: RC[s.region] }, svg); r.style.cursor = "pointer";
+      r.addEventListener("mousemove", e => showTip(`<b>Sheet ${s.id}, ${esc(s.place)}</b><br>median gap ${fmt(s.coast_median_m)} m over ${fmt(s.coast_km)} km of coast`, e.clientX, e.clientY)); r.addEventListener("mouseleave", hideTip);
+      r.addEventListener("click", () => { pickSheet(s.id); document.getElementById("atlas").scrollIntoView({ behavior: "smooth", block: "start" }); });
+      lbl(svg, x(s.coast_median_m) + 5, y + rh / 2 + 4, fmt(s.coast_median_m), "lab s b"); });
+    lbl(svg, x(R.expect.draw_m) + 4, H - 2, `${R.expect.draw_m} m: half a millimetre on the sheet`, "lab s m"); });
+  document.getElementById("coastLegend").innerHTML = SITE.regions.map(([r, c]) => `<span><i class="sq" style="background:${c}"></i>${esc(r)}</span>`).join("");
+}
+function spreadChart() {
+  const box = document.getElementById("spreadChart"); const hC = SITE.coast_hist, hP = SITE.ctrl_hist; const tC = hC.reduce((a, b) => a + b, 0), tP = hP.reduce((a, b) => a + b, 0);
+  resp(box, (W, sm_) => { const H = Math.min(300, W * .55), ml = 40, mb = 34, svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Distribution of distances" }, box);
+    const n = hC.length, bw = (W - ml - 10) / n, mx = Math.max(...hC.map(v => v / tC), ...hP.map(v => v / tP)) * 1.08, y = v => H - mb - v / mx * (H - mb - 10);
+    [0, 500, 1000, 1500, 2000, 2500].forEach(v => { const xx = ml + v / 100 * bw; el("line", { x1: xx, x2: xx, y1: 8, y2: H - mb, stroke: css("--rule") }, svg); lbl(svg, xx, H - 16, v === 2500 ? "2,500+" : fmt(v), "lab s m", "middle"); });
+    lbl(svg, (ml + W) / 2, H - 2, "metres from the true position", "lab s m", "middle");
+    hC.forEach((v, i) => { const r = el("rect", { x: ml + i * bw + 1, y: y(v / tC), width: bw - 2, height: H - mb - y(v / tC), fill: css("--red"), "fill-opacity": .75 }, svg);
+      r.addEventListener("mousemove", e => showTip(`${i * 100} to ${(i + 1) * 100} m${i === n - 1 ? " or more" : ""}<br>drawn coast ${(100 * v / tC).toFixed(1)}%; control points ${(100 * hP[i] / tP).toFixed(1)}%`, e.clientX, e.clientY)); r.addEventListener("mouseleave", hideTip); });
+    let d = ""; hP.forEach((v, i) => { const yy = y(v / tP); d += `${i ? "L" : "M"}${ml + i * bw},${yy}L${ml + (i + 1) * bw},${yy}`; }); el("path", { d, fill: "none", stroke: css("--blue"), "stroke-width": 2.2 }, svg); });
+}
+function rotChart() {
+  const box = document.getElementById("rotChart"); const D = LOCS.slice().sort((a, b) => a.id - b.id);
+  resp(box, (W, sm_) => { const H = 220, ml = 40, mb = 34, svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Rotation of each sheet" }, box);
+    const x = i => ml + (i + .5) * (W - ml - 10) / D.length, y = v => H - mb - (v + 12) / 24 * (H - mb - 10);
+    [-10, -5, 0, 5, 10].forEach(v => { el("line", { x1: ml, x2: W - 10, y1: y(v), y2: y(v), stroke: v === 0 ? css("--fg") : css("--rule") }, svg); lbl(svg, ml - 6, y(v) + 4, (v > 0 ? "+" : "") + v + "°", "lab s m", "end"); });
+    D.forEach((s, i) => { const good = s.coast_cond >= .15; const c = el("circle", { cx: x(i), cy: y(Math.max(-12, Math.min(12, s.rotation_deg))), r: 5, fill: good ? RC[s.region] : css("--card"), stroke: RC[s.region], "stroke-width": 2 }, svg);
+      c.style.cursor = "pointer"; c.addEventListener("mousemove", e => showTip(`<b>Sheet ${s.id}, ${esc(s.place)}</b><br>${s.rotation_deg > 0 ? "+" : ""}${s.rotation_deg.toFixed(1)}° ${good ? "" : "(straight coast: loose)"}`, e.clientX, e.clientY)); c.addEventListener("mouseleave", hideTip);
+      c.addEventListener("click", () => { pickSheet(s.id); document.getElementById("atlas").scrollIntoView({ behavior: "smooth", block: "start" }); });
+      if (!sm_ || i % 2 === 0) lbl(svg, x(i), H - 16, s.id, "lab s m", "middle"); });
+    lbl(svg, (ml + W) / 2, H - 2, "sheet number", "lab s m", "middle"); });
+}
+function sheetTable() {
+  const t = document.getElementById("sheetTable");
+  t.innerHTML = `<thead><tr><th>Sheet</th><th>Area</th><th class="r">Coast</th><th class="r">Gap</th><th class="r">Tilt</th><th class="r">Points</th><th class="r">Error</th></tr></thead><tbody>` +
+    SH.map(s => s.status === "located" ? `<tr data-k="${s.id}"><td><span class="chip" style="background:${RC[s.region]}"></span>${s.id}</td><td>${esc(s.place)}</td><td class="r">${fmt(s.coast_km)} km</td><td class="r">${fmt(s.coast_median_m)} m</td><td class="r">${s.rotation_deg.toFixed(1)}°</td><td class="r">${s.n_ctrl}</td><td class="r">${s.n_ctrl ? fmt(s.ctrl_rigid_median_m) + " m" : ""}</td></tr>`
+      : `<tr><td>${s.id}</td><td colspan="6" style="color:var(--muted)">not placed: ${esc(s.note)}</td></tr>`).join("") + "</tbody>";
+  t.querySelectorAll("tr[data-k]").forEach(tr => tr.onclick = () => { pickSheet(+tr.dataset.k); document.getElementById("atlas").scrollIntoView({ behavior: "smooth", block: "start" }); });
+}
+function syncTable() { document.querySelectorAll("#sheetTable tr[data-k]").forEach(tr => tr.style.fontWeight = +tr.dataset.k === S.sheet ? "500" : ""); }
+function natBox() {
+  const box = document.getElementById("natBox"), I = SITE.nat_img, kp = R.national.km_per_px;
+  const svg = el("svg", { viewBox: `0 0 ${I.w} ${I.h}`, role: "img", "aria-label": "Errors on the 1878 map" }, box);
+  SITE.national.forEach(r => { const [f, k, x, y, la, lo, dE, dN, d] = r; const x2 = x - 10 * dE / kp, y2 = y + 10 * dN / kp;
+    el("line", { x1: x, y1: y, x2, y2, stroke: "#B8322A", "stroke-width": 5, "stroke-linecap": "round" }, svg);
+    el("circle", { cx: x2, cy: y2, r: 7, fill: "#B8322A" }, svg);
+    const c = el("circle", { cx: x, cy: y, r: 13, fill: "#FFFCF4", stroke: "#B8322A", "stroke-width": 4 }, svg); c.style.cursor = "pointer";
+    c.addEventListener("mousemove", e => showTip(`<b>${esc(f)}</b><br>${d.toFixed(1)} km out: ${Math.abs(dE).toFixed(1)} km ${dE > 0 ? "too far east" : "too far west"}, ${Math.abs(dN).toFixed(1)} km ${dN > 0 ? "too far north" : "too far south"}`, e.clientX, e.clientY)); c.addEventListener("mouseleave", hideTip); });
+}
+function natChart() {
+  const box = document.getElementById("natChart"); const D = SITE.national;
+  resp(box, (W, sm_) => { const H = Math.min(320, W * .6), ml = 40, mb = 34, svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "East-west and north-south errors by longitude" }, box);
+    const x = v => ml + (v - 129) / 14 * (W - ml - 10), y = v => H - mb - (v + 18) / 36 * (H - mb - 10);
+    [130, 132, 134, 136, 138, 140, 142].forEach(v => { el("line", { x1: x(v), x2: x(v), y1: 8, y2: H - mb, stroke: css("--rule") }, svg); lbl(svg, x(v), H - 16, v + "° E", "lab s m", "middle"); });
+    [-15, -10, -5, 0, 5, 10, 15].forEach(v => { el("line", { x1: ml, x2: W - 10, y1: y(v), y2: y(v), stroke: v === 0 ? css("--fg") : css("--rule") }, svg); lbl(svg, ml - 6, y(v) + 4, v, "lab s m", "end"); });
+    lbl(svg, (ml + W) / 2, H - 2, "longitude; error in km", "lab s m", "middle");
+    D.forEach(r => { const [f, k, , , la, lo, dE, dN] = r;
+      const a = el("circle", { cx: x(lo), cy: y(dE), r: 5, fill: css("--blue") }, svg); const b = el("rect", { x: x(lo) - 4.5, y: y(dN) - 4.5, width: 9, height: 9, fill: css("--gold") }, svg);
+      [a, b].forEach(m => { m.addEventListener("mousemove", e => showTip(`<b>${esc(f)}</b><br>east-west ${dE.toFixed(1)} km, north-south ${dN.toFixed(1)} km`, e.clientX, e.clientY)); m.addEventListener("mouseleave", hideTip); }); }); });
+}
+
+/* ---------- theme ---------- */
+document.getElementById("theme").onclick = () => { const r = document.documentElement; r.dataset.theme = isDark() ? "light" : "dark";
+  const P = pal();
+  if (wReady) { wm.setPaintProperty("bg", "background-color", P.sea); wm.setPaintProperty("land", "fill-color", P.land); wm.setPaintProperty("world", "fill-color", P.land); wm.setPaintProperty("arr", "line-color", P.red); }
+  if (sReady) sm.setPaintProperty("bg", "background-color", P.panel);
+  redraws.forEach(f => f()); };
+
+startMaps(); side(); coastChart(); spreadChart(); rotChart(); sheetTable(); syncTable(); natBox(); natChart();
+document.getElementById("sName").textContent = `sheet ${S.sheet}`;
+</script>
+/*FULLSCREEN*/
+</body>
+</html>

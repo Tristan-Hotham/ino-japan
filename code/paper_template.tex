@@ -1,0 +1,129 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{fontspec}
+\setmainfont{TeX Gyre Pagella}
+\newfontfamily\headfont{Inter}[UprightFont=*-ExtraBold,BoldFont=*-ExtraBold,Extension=.otf,Path=/usr/share/fonts/opentype/inter/]
+\usepackage[a4paper,margin=2.3cm]{geometry}
+\usepackage{graphicx,booktabs,float,caption,array,xcolor,longtable}
+\usepackage{xurl}
+\usepackage[hidelinks]{hyperref}
+\usepackage{titlesec}
+\usepackage[round]{natbib}
+\usepackage{setspace}
+\setstretch{1.05}
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.75}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+\titleformat{\section}{\headfont\Large}{\thesection}{0.8em}{}
+\titleformat{\subsection}{\headfont\large}{\thesubsection}{0.8em}{}
+\captionsetup{font=small,labelfont=bf}
+\urlstyle{same}
+\hypersetup{pdftitle={How Close Did Ino Get?},pdfauthor={Tristan Hotham}}
+
+\begin{document}
+\begin{center}
+{\Large\bfseries How Close Did Ino Get?\par}
+\vspace{0.4em}
+{\large Measuring {{source.located|int}} sheets of Ino Tadataka's large-scale map of Japan (1821)\\against the modern coastline\par}
+\vspace{1.2em}
+{\large Tristan Hotham\par}
+\vspace{0.3em}
+{\small Independent researcher\\
+ORCID: 0000-0003-4931-9349\\
+DOI: \href{https://doi.org/{{meta.doi}}}{https://doi.org/{{meta.doi}}}\par}
+\vspace{0.8em}
+2026
+\end{center}
+
+\begin{quote}
+\small
+\begin{center}\textbf{Abstract}\end{center}
+Ino Tadataka's survey map of Japan, completed in {{facts.completed|raw}}, is celebrated for its accuracy. I test that reputation on the {{source.n_sheets|int}} sheets of the large-scale set (Dai Nihon Enkai Yochi Zenzu) held in manuscript copy by the Library of Congress and photographed on Wikimedia Commons, which cover Hokkaido, the southern Kurils and part of Sakhalin at a nominal 1:{{facts.scale_hokkaido|int}}. Each sheet was placed by matching its drawn coastline to Natural Earth's 1:10m coast, and {{source.located|int}} were located. Allowing each sheet only one shift and one rotation at the nominal scale, the drawn coast of a typical sheet lies a median {{coast.median_of_sheets_m|int}} m from the modern coast ({{expect.coast_mm|f1}} mm on the paper), with {{coast.within1000_median_pct|int}}\% within 1 km; {{coast.km|int}} km of drawn coast were measured. {{ctrl.n|int}} control points ({{ctrl.hand|int}} picked by eye, {{ctrl.auto|int}} matched automatically) lie a median {{ctrl.median_m|int}} m from their true positions. Sheets whose coast fixes the angle are rotated a median {{distortion.rot_abs_median|f1}} degrees from true north, and the best-fitting scales of well-controlled sheets agree within {{distortion.scale_dev_pct|int}}\%; neither affine nor quadratic fits improve on a similarity transform. On the 1878 Army General Staff map of the whole country, compiled from Ino's survey, {{national.n|int}} capes and islands lie a median {{national.median_km|f1}} km from a best-fitting modern position, with north-south and east-west errors of similar size and a marginal east-west stretch of {{national.ew_stretch_pct|f1}}\%. All figures are upper bounds on survey error, since they include copying, paper distortion and the generalisation of the modern coastline.
+
+\textbf{Keywords:} Ino Tadataka; historical cartography; map accuracy; georeferencing; Hokkaido; Edo period; open data
+\end{quote}
+
+\section{Introduction}
+Ino Tadataka ({{facts.born|raw}} to {{facts.died|raw}}) was a merchant who ran a sake brewing business in Sawara and, after retiring, studied astronomy in Edo. From {{facts.first_survey|raw}} he led a series of surveys that measured Japan's coasts and main roads by traverse, with distances paced or chained, bearings by compass and latitudes by star observations. The survey's maps were completed by his team in {{facts.completed|raw}}, after his death in {{facts.died|raw}}, as the Dai Nihon Enkai Yochi Zenzu: {{facts.total_sheets|int}} large-scale sheets at 1:{{facts.scale_main|int}}, with Hokkaido and part of northern Japan at 1:{{facts.scale_hokkaido|int}}, and medium and small-scale versions. The map is widely described as remarkably accurate. This study asks how accurate, for the part of the large-scale set that is openly available as photographs: how far its drawn coast lies from the modern coast, how far identifiable features are displaced, whether the sheets are rotated or out of scale, and, at the national scale, whether latitude and longitude errors differ. The paper accompanies an interactive comparison (\url{{{meta.page}}}).
+
+\section{Data}
+\textbf{The sheets.} The Library of Congress holds a manuscript copy of the large-scale map (Geography and Map Division, item 2001620020). Wikimedia Commons has photographs of sheets 1 to {{source.last_sheet|int}}, used here reduced to {{method.width_px|int}} pixels wide (public domain). All {{source.n_sheets|int}} show the far north. They are drawn in ink and watercolour: land is shown by green hachures, the surveyed coast by an ink line, and the sea is left blank. Several sheets carry a pencil grid; {{source.drafts|int}} are unfinished pencil drafts of inland routes.
+
+\textbf{The national map.} Dai Nihon Zenzu, published in 1878 by the Army General Staff Bureau and compiled from Ino's survey (Wikimedia Commons, {{method.nat_w|int}} pixels wide, public domain).
+
+\textbf{The modern coast.} Natural Earth's 1:10m countries for Japan and the Russian-administered islands \citep{naturalearth}. This is the only modern coastline used, and its generalisation sets a floor under every error reported here.
+
+\section{Methods}
+\subsection{Extracting the drawn coast}
+On each sheet, at a quarter of the working resolution, a pixel is taken as coast if it is dark or red ink, lies within six quarter-pixels of green hachure, and belongs to an ink stroke at least {{method.stroke_qpx|int}} quarter-pixels long, which removes most labels. Masks of land and sea near the coast are kept for the placement search. The coast is thinned to one point per 8 by 8 pixel cell.
+
+\subsection{Placing the sheets}
+Each sheet was placed by brute force: for three scales around the nominal and rotations from minus {{method.rot_range|int}} to plus {{method.rot_range|int}} degrees in {{method.rot_step|int}} degree steps, the sheet's land and sea masks were correlated with modern land and sea on a {{method.grid_km|int}} km grid, by FFT. The best placements were inspected by eye on overlays; {{source.located|int}} were accepted, one (sheet 14) failed, and {{source.not_located|int}} sheets in all were left unplaced. Each accepted sheet was then fitted to the modern coast by trimmed iterative closest point, allowing a rotation and a translation with the scale fixed. The nominal scale in ground metres per pixel of the full-size photograph was calibrated on sheet 5, whose hooked Notsuke spit fixes it ({{method.m_per_orig_px|f2}} m per pixel, about {{method.dpi|int}} pixels per inch at 1:{{facts.scale_hokkaido|int}}), and carried to the other sheets through each photograph's known pixel size. All measurements are on a Lambert conformal conic projection with standard parallels 33 and 44 degrees; rotations are corrected for meridian convergence and so are relative to true north.
+
+\subsection{Coastline agreement}
+Along the drawn coast of each located sheet, a checkpoint was taken every kilometre (so the number of checkpoints is the length of drawn coast in km), and for every drawn coast point the distance to the nearest modern coast was measured after the fit. Each sheet is summarised by the median distance and the shares within 250 m, 500 m and 1 km.
+
+\subsection{Control points}
+A coastline constrains position across the shore but not along it. Two kinds of control point constrain both. (a) {{ctrl.hand|int}} capes, spit tips and bends were picked by eye on overlays of the sheet and the modern coast, where both show the same feature, with a confidence grade; their modern positions are the nearest Natural Earth coast vertex to the feature. (b) Every {{method.window_step_km|int}} km along the drawn coast, a window {{method.window_km|int}} km across was matched to the modern coast by a local translation (iterative closest point after the sheet's fit); a window became a control point only if the modern coast it matched turns enough to fix the shift in both directions (smaller to larger eigenvalue of the summed outer product of coast normals at least {{method.tie_cond|f2}}), its matched points lay within a median {{method.tie_match_m|int}} m and the shift was under {{method.tie_shift_km|int}} km. This gave {{ctrl.auto|int}} points. The error of a control point is the distance between its true position and where the sheet's coastline fit puts it; the control points are not used in that fit. On sheets with at least four control points I also fitted similarity, affine (six or more points) and quadratic (twelve or more) transformations of sheet pixels to modern positions and computed leave-one-out errors.
+
+\subsection{National check}
+On the 1878 map I picked {{national.n|int}} features by eye: capes at the extremities of Honshu, Shikoku and Kyushu and the centres of {{method.islands|int}} islands. They were fitted to their modern positions by a similarity transform and by an affine transform; residuals were split into north-south and east-west parts, and the ratio of east-west to north-south scale in the affine fit was bootstrapped ({{method.boot|int}} resamples).
+
+\section{Results}
+\subsection{Where the sheets are}
+Figure~\ref{fig:overview} shows the {{source.located|int}} located sheets. They follow the coast round Hokkaido and out to Kunashiri, Iturup and Sakhalin: {{regions.Japan Sea coast.sheets|int}} on the Japan Sea coast, {{regions.Pacific coast.sheets|int}} on the Pacific coast, {{regions.Okhotsk coast.sheets|int}} on the Okhotsk coast, {{regions.Nemuro and Kushiro.sheets|int}} around Nemuro and Kushiro, {{regions.Kuril islands.sheets|int}} in the Kurils and {{regions.Sakhalin.sheets|int}} in Sakhalin. Table~\ref{tab:sheets} lists them.
+
+\begin{figure}[tbp]\centering\includegraphics[width=\textwidth]{f_overview.png}
+\caption{The {{source.located|int}} located sheets on a modern map, with the drawn coast in red.}\label{fig:overview}\end{figure}
+
+\subsection{Coastline agreement}
+After one shift and one rotation per sheet at the nominal scale, the median distance from the drawn coast to the modern coast is {{coast.median_of_sheets_m|int}} m on a typical sheet (median over sheets), ranging from {{coast.best_m|int}} m (sheet {{coast.best_sheet|int}}, {{coast.best_place|raw}}) to {{coast.worst_m|int}} m (sheet {{coast.worst_sheet|int}}, {{coast.worst_place|raw}}); {{coast.sheets_under_300|int}} sheets are under 300 m and {{coast.sheets_over_500|int}} over 500 m (Figure~\ref{fig:coast}). On a typical sheet {{coast.within250_median_pct|int}}\% of the drawn coast is within 250 m, {{coast.within500_median_pct|int}}\% within 500 m and {{coast.within1000_median_pct|int}}\% within 1 km (Figure~\ref{fig:spread}). At 1:{{facts.scale_hokkaido|int}}, the median gap is {{expect.coast_mm|f1}} mm on the paper, about {{expect.coast_x_draw|int}} times a drafting error of {{expect.draw_mm|raw}} mm ({{expect.draw_m|int}} m).
+
+\begin{figure}[tbp]\centering\includegraphics[width=\textwidth]{f_coast.png}
+\caption{Median distance from each sheet's drawn coast to the modern coast after a rigid fit at the nominal scale.}\label{fig:coast}\end{figure}
+
+\begin{figure}[tbp]\centering\includegraphics[width=\textwidth]{f_sheet.png}
+\caption{Sheet 6 (Nemuro peninsula and Nemuro Bay) as drawn and placed on the modern coast, with its control points.}\label{fig:sheet}\end{figure}
+
+\subsection{Control points}
+I found {{ctrl.n|int}} control points on {{ctrl.sheets|int}} sheets, short of the {{ctrl.target|int}} I aimed for; only {{ctrl.sheets_8|int}} sheets have eight or more. Their median error is {{ctrl.median_m|int}} m ({{ctrl.hand_median_m|int}} m for the hand-picked points, {{ctrl.auto_median_m|int}} m for the automatic ones); {{ctrl.under_500_pct|int}}\% are under 500 m and {{ctrl.under_1000_pct|int}}\% under 1 km, and the largest is {{ctrl.max_m|int}} m, at Cape Erimo. Of the named capes picked with high confidence, Cape Nosappu is {{ctrl.named.Cape Nosappu.res_m|int}} m from its modern position, Cape Notoro {{ctrl.named.Cape Notoro.res_m|int}} m and the tip of the Shakotan peninsula {{ctrl.named.tip of the Shakotan peninsula.res_m|int}} m.
+
+On the {{fitq.sim_sheets|int}} sheets with four or more control points, a similarity transform predicts a left-out point to a median {{fitq.sim_loo_median_m|int}} m. On the {{fitq.aff_sheets|int}} sheets with six or more, an affine transform gives {{fitq.aff_loo_median_m|int}} m against {{fitq.sim_loo_on_aff_sheets_m|int}} m for the similarity; on the {{fitq.quad_sheets|int}} sheets with twelve or more, a quadratic gives {{fitq.quad_loo_m|int}} m against {{fitq.aff_loo_on_quad_sheets_m|int}} m for the affine. The control points therefore show no distortion within sheets beyond a shift, a rotation and a scale.
+
+\subsection{Rotation and scale}
+On the {{distortion.rot_n|int}} sheets whose coast curves enough to fix the angle (the same eigenvalue ratio, over the whole sheet, at least {{method.rot_cond|f2}}), the rotation from true north has a median of {{distortion.rot_median|f1}} degrees and a median absolute value of {{distortion.rot_abs_median|f1}} degrees, from {{distortion.rot_min|f1}} to {{distortion.rot_max|f1}}; {{distortion.rot_within2|int}} are within 2 degrees. On the {{distortion.scale_n|int}} sheets with six or more control points, the similarity scale relative to the nominal is {{distortion.scale_min|f2}} to {{distortion.scale_max|f2}} (median {{distortion.scale_median|f2}}).
+
+\subsection{The national map}
+On the 1878 map (Figure~\ref{fig:national}), the {{national.n|int}} features lie a median {{national.median_km|f1}} km from their best-fitting positions (maximum {{national.max_km|f1}} km, {{national.max_feature|raw}}). Root mean square errors are {{national.rms_ns_km|f1}} km north-south and {{national.rms_ew_km|f1}} km east-west; the median absolute errors are {{national.dlat_abs_median_min|f1}} minutes of latitude and {{national.dlon_abs_median_min|f1}} minutes of longitude. Neither component trends with longitude (slopes {{national.slope_ew|f2}} and {{national.slope_ns|f2}} km per degree). In the affine fit east-west distances are {{national.ew_stretch_pct|f1}}\% longer than north-south ones (95\% bootstrap interval {{national.ci_lo_pct|f1}} to {{national.ci_hi_pct|f1}}\%). With a map scale of {{national.km_per_px|f2}} km per pixel, three pixels of picking uncertainty is {{national.pick_km|f1}} km.
+
+\begin{figure}[tbp]\centering\includegraphics[width=\textwidth]{f_national.png}
+\caption{Errors of {{national.n|int}} features on the 1878 Army General Staff map after the best similarity fit (arrows ten times longer), and their east-west and north-south parts against longitude.}\label{fig:national}\end{figure}
+
+\begin{figure}[tbp]\centering\includegraphics[width=\textwidth]{f_spread.png}
+\caption{Distribution of distances from the drawn coast to the modern coast (all located sheets) and of control point errors.}\label{fig:spread}\end{figure}
+
+\section{Limitations}
+First, coverage: {{source.n_sheets|int}} of {{facts.total_sheets|int}} sheets ({{source.pct_of_set|f1}}\%), all in the far north at the smaller scale, so nothing here measures the 1:{{facts.scale_main|int}} sheets of Honshu, Shikoku and Kyushu. Much of the northern coast on the finished map is usually credited to Mamiya Rinzo rather than to Ino's own traverses; the results describe the map, not one surveyor. Second, the modern reference: Natural Earth's 1:10m coast is generalised for small-scale mapping and is in places several hundred metres from the true shore, so every distance here is an upper bound. Third, the sheets are a copy, photographed after folding; copying and paper distortion are included in the errors. Fourth, the scale is calibrated on one sheet and transferred by photograph size, which assumes a uniform photographic resolution. Fifth, the control points are few, and on straight coasts the rotation and along-shore position are weakly determined. Sixth, the national check rests on {{national.n|int}} points picked on a low-resolution photograph and on an unknown 1878 projection; the east-west stretch could come from either Ino's longitudes or the projection.
+
+\section{Conclusion}
+Within the limits of a generalised modern coastline, the northern sheets of Ino's large-scale map are accurate to a few hundred metres once each is placed: a median of {{coast.median_of_sheets_m|int}} m along {{coast.km|int}} km of coast, square to true north within about a degree or two and consistent in scale. At the national scale the 1878 map built from the survey places capes and islands within a few kilometres, and at this resolution its east-west errors are no larger than its north-south ones. A test of the main islands, and a modern coastline at survey resolution, would sharpen every figure here.
+
+\section*{Data and code availability}
+The interactive comparison is at \url{{{meta.page}}}. Data and code are at \url{{{meta.repo}}} and archived with this paper at \url{https://doi.org/{{meta.doi}}}. Derived data are released under CC BY 4.0 and code under the MIT licence. The map images are in the public domain.
+
+\section*{AI statement}
+I wrote the text, with drafting and editing assistance from Claude (Anthropic), which also helped prepare the analysis code. I reviewed and checked all text and results.
+
+\begin{thebibliography}{9}
+\bibitem[Ino(1821)]{ino} Ino Tadataka and team (1821) \textit{Dai Nihon Enkai Yochi Zenzu}, large-scale sheets, manuscript copy. Library of Congress, Geography and Map Division, item 2001620020. Photographs via Wikimedia Commons, public domain. \url{https://www.loc.gov/item/2001620020/}
+\bibitem[Army General Staff Bureau(1878)]{army} Army General Staff Bureau (1878) \textit{Dai Nihon Zenzu}. Tokyo. Wikimedia Commons, public domain.
+\bibitem[Natural Earth(2026)]{naturalearth} Natural Earth (2026) Admin 0 countries, 1:10m and 1:50m. Public domain. \url{https://www.naturalearthdata.com/}
+\end{thebibliography}
+
+\clearpage
+\appendix
+\section{The sheets}
+{{TABLE_SHEETS}}
+\end{document}

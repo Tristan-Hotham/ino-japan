@@ -1,0 +1,24 @@
+sheet,gcp,kind,x,y,lat,lon,conf,note
+3,3-1,cape,307,920,43.82856,145.40992,high,
+3,3-2,cape,340,833,43.84077,145.41706,medium,
+3,3-3,cape,1343,680,43.86236,145.61251,medium,
+3,3-4,cape,1667,420,43.90012,145.67705,high,Chayashikotsu cape (labelled misaki)
+3,3-5,cape,471,1645,43.72451,145.44313,high,Notetou cape (labelled misaki)
+3,3-6,spit,956,1987,43.65266,145.55616,low,Keramui cape spit tip; modern outline crude
+5,5-1,spit,3550,4790,43.55488,145.3628,high,Notsuke spit tip
+5,5-2,bay,1495,1165,43.88076,145.10613,medium,
+5,5-3,cape,2455,4565,43.5761,145.22379,low,
+6,6-1,cape,3177,319,43.3741,145.82379,high,Cape Nosappu
+6,6-2,spit,1175,923,43.30522,145.39233,high,spit tip on Nemuro Bay
+6,6-3,cape,1823,1715,43.16778,145.5254,medium,
+6,6-4,cape,1695,1823,43.1684,145.49638,low,
+7,7-1,cape,257,496,44.11921,144.24293,high,Cape Notoro
+7,7-2,cape,468,1043,44.02635,144.2997,medium,
+7,7-3,cape,3297,875,44.05128,144.96778,medium,
+7,7-4,cape,2782,1451,43.94687,144.83713,medium,
+7,7-5,bend,2590,1612,43.92328,144.79125,medium,
+19,19-1,cape,1110,149,43.37299,140.47241,high,tip of the Shakotan peninsula
+19,19-2,cape,508,427,43.32345,140.3594,medium,north-west corner of the peninsula
+24,24-1,cape,2551,5347,41.92886,143.24222,high,Cape Erimo
+24,24-2,cape,2959,4020,42.02578,143.30348,medium,
+24,24-3,cape,3184,2204,42.182,143.33461,medium,

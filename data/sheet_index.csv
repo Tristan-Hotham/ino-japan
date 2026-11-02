@@ -1,0 +1,41 @@
+sheet,status,region,place,init_lat,init_lon,init_rot,note
+1,not located,,,,,,a few strokes of one island only
+2,located,Kuril islands,Kunashiri (middle),44.10631,145.71146,7.9,
+3,located,Kuril islands,"Kunashiri (south, Tomari)",43.79769,145.72653,4.8,
+4,located,Kuril islands,"Iturup (Etorofu), south-west",44.95887,147.47943,11.9,
+5,located,Okhotsk coast,Rausu to the Notsuke spit,43.68886,145.15826,4.9,
+6,located,Nemuro and Kushiro,Nemuro peninsula and Nemuro Bay,43.26241,145.55024,1.9,
+7,located,Okhotsk coast,Abashiri to Shari,44.03473,144.63923,3.5,
+8,located,Okhotsk coast,Tokoro and Lake Saroma,44.14986,143.8432,6.6,
+9,located,Okhotsk coast,Sarufutsu,45.2018,142.28571,-7.4,
+10,located,Okhotsk coast,Omu,44.67736,142.90827,9.1,
+11,located,Okhotsk coast,Hamatonbetsu,45.16628,142.34783,2.0,
+12,located,Sakhalin,west coast of southern Sakhalin,46.30514,141.80598,-3.1,
+13,located,Japan Sea coast,Rishiri and Rebun (east coasts),45.21475,141.1716,-1.4,
+14,not located,,,,,,coast and two islands; the automatic fit failed and I could not place it with confidence
+15,located,Japan Sea coast,Haboro,44.15078,141.5355,3.7,
+16,located,Japan Sea coast,Mashike,43.64999,141.55012,4.2,
+17,located,Japan Sea coast,Ishikari Bay and Otaru,43.2436,141.45896,8.2,
+18,not located,,,,,,"a single small island, too little coast to place"
+19,located,Japan Sea coast,Shakotan peninsula,43.2366,140.64015,1.3,
+20,located,Japan Sea coast,Iwanai,42.83454,140.39301,5.8,
+21,located,Nemuro and Kushiro,Akkeshi,43.02051,144.81841,2.9,
+22,located,Nemuro and Kushiro,Kushiro,42.87631,144.12872,3.9,
+23,located,Pacific coast,Tokachi coast,42.45942,143.43267,16.2,
+24,located,Pacific coast,Cape Erimo,42.10784,143.18432,3.9,
+25,located,Pacific coast,Shizunai,42.2994,142.33995,-7.0,
+26,located,Pacific coast,Hidaka-Monbetsu,42.47603,142.1329,4.4,
+27,located,Pacific coast,Tomakomai,42.77208,141.57994,2.2,
+28,located,Pacific coast,Muroran,42.52142,141.11228,-0.9,
+29,located,Pacific coast,"Oshamambe, Uchiura Bay",42.4728,140.56549,-0.7,
+30,located,Pacific coast,"Shikabe, Uchiura Bay",41.91568,140.96097,-8.4,
+31,not located,,,,,,unfinished pencil draft of an inland route
+32,located,Japan Sea coast,Setana,42.51945,139.96343,1.1,
+33,not located,,,,,,unfinished pencil draft
+34,not located,,,,,,two islands sketched only
+35,not located,,,,,,unfinished pencil draft of an inland route
+36,not located,,,,,,unfinished pencil draft
+37,not located,,,,,,unfinished pencil draft of inland routes
+38,not located,,,,,,unfinished pencil draft
+39,not located,,,,,,"unfinished pencil draft, almost blank"
+40,not located,,,,,,unfinished pencil draft of inland routes
