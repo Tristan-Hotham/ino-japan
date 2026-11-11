@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this data or code, please cite it as below."
+title: "How Close Did Ino Get? Measuring Sheets of Ino Tadataka's Large-Scale Map of Japan (1821) Against the Modern Coastline"
+type: dataset
+authors:
+  - family-names: Hotham
+    given-names: Tristan
+    orcid: "https://orcid.org/0000-0003-4931-9349"
+    affiliation: "Independent researcher"
+doi: "10.5281/zenodo.23882609"
+url: "https://maps.tristanhotham.com/ino-japan/"
+repository-code: "https://github.com/Tristan-Hotham/ino-japan"
+license: CC-BY-4.0
+keywords:
+  - "Ino Tadataka"
+  - "historical cartography"
+  - "map accuracy"
+  - "georeferencing"
+  - "Hokkaido"
+  - "Edo period"
+  - "Japan"
+  - "open data"
+  - "maps"
